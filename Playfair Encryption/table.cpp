@@ -95,16 +95,16 @@ int main() {
   }
 
   // add left alpha chars to table
-  pos = 0 + tarstr.length();
-
-  // cout << "Pos: " << pos << endl;
-  // for (int i = continue_i; i < 5; i++) {
-  //   for (int j = continue_j; j < 5; j++) {
-  //     if (pos < symDifference.size()) {
-  //       table[i][j] = tarstr[pos++];
-  //     }
-  //   }
-  // }
+  pos = 0;
+  std::vector<char> tarlefstr(lefalpha.begin(), lefalpha.end());
+  cout << "Pos: " << pos << endl;
+  for (int i = continue_i; i < 5; i++) {
+    for (int j = continue_j; j < 5; j++) {
+      if (pos < lefalpha.size()) {
+        table[i][j] = tarlefstr[pos++];
+      }
+    }
+  }
 
   cout << "----------------------------------------" << endl;
   cout << "Alpha: ";
