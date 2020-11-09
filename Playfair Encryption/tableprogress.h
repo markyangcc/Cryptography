@@ -25,25 +25,28 @@ array<array<char, 5>, 5> build_table() {
   // simpifily code
   string tarstr = rmstr_duplicates(key);
   tarstr = rmstr_isspace(tarstr);
-  cout << tarstr << endl;
-  cout << tarstr.length() << endl;
+
+  // cout << tarstr << endl;
+  // cout << tarstr.length() << endl;
 
   // add key to table
   int pos = 0;
-  int continue_i, continue_j;  // Calc Next start position to fill table
+  int continue_i = 0, continue_j = 0;  // Calc Next start position to fill table
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 5; j++) {
-      if (pos < tarstr.length()) {
+      if (pos <= tarstr.length()) {
         table[i][j] = tarstr[pos++];
-        continue_i = i + 1;
-        continue_j = j % 4;
+        // cout << "Pos: " << pos;
+        continue_j = (pos - 1) % 5;
+        continue_i = (pos - continue_j) / 5;
+        // cout <<endl<< "Pos: " << pos;
       }
     }
   }
 
   cout << continue_i << "  " << continue_j << endl;
 
-  cout << "tarstr: " << tarstr << endl;
+  // cout << "tarstr: " << tarstr << endl;
   //------------------------------------------------------
 
   string alphastr = "abcdefghijklmnopqrstuvwxyz";
@@ -56,7 +59,7 @@ array<array<char, 5>, 5> build_table() {
   set<char> v1 = alpha;
   set<char> v2 = settarstr;
 
-  cout << "set_symmetric_difference" << endl;
+  // cout << "set_symmetric_difference" << endl;
   std::vector<char> symDifference;
   std::set_symmetric_difference(v1.begin(), v1.end(), v2.begin(), v2.end(),
                                 std::back_inserter(symDifference));
@@ -64,10 +67,10 @@ array<array<char, 5>, 5> build_table() {
   set<char> lefalpha(begin(symDifference), end(symDifference));
 
   // check size() to check if function works successed
-  cout << "symDifference size: " << symDifference.size() << endl;
+  // cout << "symDifference size: " << symDifference.size() << endl;
 
   vector<char> omitij = symDifference;
-  cout << "omitij size: " << omitij.size() << endl;
+  // cout << "omitij size: " << omitij.size() << endl;
 
   // std::find() Returns an iterator to the first element in the range
   // [first,last) that compares equal to val. If no such element is found, the
@@ -93,12 +96,13 @@ array<array<char, 5>, 5> build_table() {
 
   } else {
     cout << "Not found i or j in target str" << endl;
+    lefalpha.erase('i');
   }
 
   // add left alpha chars to table
   pos = 0;
   std::vector<char> tarlefstr(lefalpha.begin(), lefalpha.end());
-  cout << "Pos: " << pos << endl;
+  // cout << "Pos: " << pos << endl;
   for (int i = continue_i; i < 5; i++) {
     for (int j = continue_j; j < 5; j++) {
       if (pos < lefalpha.size()) {
@@ -107,24 +111,24 @@ array<array<char, 5>, 5> build_table() {
     }
   }
 
-  cout << "----------------------------------------" << endl;
-  cout << "Alpha: ";
-  for (auto i : alpha) cout << i;
+  // cout << "----------------------------------------" << endl;
+  // cout << "Alpha: ";
+  // for (auto i : alpha) cout << i;
 
-  cout << endl;
-  cout << "Settarstr: ";
-  for (auto i : settarstr) cout << i;
+  // cout << endl;
+  // cout << "Settarstr: ";
+  // for (auto i : settarstr) cout << i;
 
-  cout << endl;
-  cout << "symDifference: ";
-  for (auto i : symDifference) std::cout << i;
-  cout << endl;
+  // cout << endl;
+  // cout << "symDifference: ";
+  // for (auto i : symDifference) std::cout << i;
+  // cout << endl;
 
-  cout << "left alpha: ";
-  for (auto i : lefalpha) std::cout << i;
-  cout << endl;
+  // cout << "left alpha: ";
+  // for (auto i : lefalpha) std::cout << i;
+  // cout << endl;
 
-  cout << "----------------------------------------" << endl;
+  // cout << "----------------------------------------" << endl;
 
   // cout << alpha.length() << endl;
 
