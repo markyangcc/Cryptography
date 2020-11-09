@@ -10,9 +10,10 @@ int main() {
     for (int j = 0; j < 5; j++) {
       cout << pftable[i][j];
     }
+    cout << endl;
   }
 
-    // cout << endl << "Specify pos: " << pftable[2][1];
+  // cout << endl << "Specify pos: " << pftable[2][1];
 
   return 0;
 }

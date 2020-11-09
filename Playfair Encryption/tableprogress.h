@@ -30,21 +30,21 @@ array<array<char, 5>, 5> build_table() {
   // cout << tarstr.length() << endl;
 
   // add key to table
-  int pos = 0;
-  int continue_i = 0, continue_j = 0;  // Calc Next start position to fill table
-  for (int i = 0; i < 5; i++) {
-    for (int j = 0; j < 5; j++) {
-      if (pos <= tarstr.length()) {
-        table[i][j] = tarstr[pos++];
-        // cout << "Pos: " << pos;
-        continue_j = (pos - 1) % 5;
-        continue_i = (pos - continue_j) / 5;
-        // cout <<endl<< "Pos: " << pos;
-      }
-    }
-  }
+  // int pos = 0;
+  // int continue_i = 0, continue_j = 0;  // Calc Next start position to fill
+  // table for (int i = 0; i < 5; i++) {
+  //   for (int j = 0; j < 5; j++) {
+  //     if (pos <= tarstr.length()) {
+  //       table[i][j] = tarstr[pos++];
+  //       // cout << "Pos: " << pos;
+  //       continue_j = (pos - 1) % 5;
+  //       continue_i = (pos - continue_j) / 5;
+  //       // cout <<endl<< "Pos: " << pos;
+  //     }
+  //   }
+  // }
 
-  cout << continue_i << "  " << continue_j << endl;
+  // cout << continue_i << "  " << continue_j << endl;
 
   // cout << "tarstr: " << tarstr << endl;
   //------------------------------------------------------
@@ -92,24 +92,44 @@ array<array<char, 5>, 5> build_table() {
              settarstr.find('i') == settarstr.end()) {
     cout << "Found j, but not dound i in target str" << endl;
 
+    // TODO: replace j to i in tarstr
+    // tarstr.replace('j', 'i'); and find()
+    //  tarstr.find()
     lefalpha.erase('i');
 
   } else {
     cout << "Not found i or j in target str" << endl;
-    lefalpha.erase('i');
+    lefalpha.erase('j');
   }
 
-  // add left alpha chars to table
-  pos = 0;
-  std::vector<char> tarlefstr(lefalpha.begin(), lefalpha.end());
-  // cout << "Pos: " << pos << endl;
-  for (int i = continue_i; i < 5; i++) {
-    for (int j = continue_j; j < 5; j++) {
-      if (pos < lefalpha.size()) {
-        table[i][j] = tarlefstr[pos++];
-      }
+  std::vector<char> tarlefstrvet(lefalpha.begin(), lefalpha.end());
+  std::string tarlefstr(tarlefstrvet.begin(), tarlefstrvet.end());
+  string lefalphastr = tarlefstr;
+  string keystr = tarstr + lefalphastr;
+
+  cout << "---------------------------------------" << keystr << endl;
+
+  std::vector<char> keystrvet(keystr.begin(), keystr.end());
+
+  int cnt = 0;
+  for (int i = 0; i < 5; i++) {
+    for (int j = 0; j < 5; j++) {
+      table[i][j] = keystr[cnt++];
     }
   }
+  cout << endl;
+
+  // add left alpha chars to table
+  // pos = 0;
+  // std::vector<char> tarlefstr(lefalpha.begin(), lefalpha.end());
+  // // cout << "Pos: " << pos << endl;
+  // for (int i = continue_i; i < 5; i++) {
+  //   for (int j = continue_j; j < 5; j++) {
+  //     if (pos < lefalpha.size()) {
+  //       table[i][j] = tarlefstr[pos++];
+  //     }
+  //   }
+  // }
 
   // cout << "----------------------------------------" << endl;
   // cout << "Alpha: ";
