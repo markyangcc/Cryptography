@@ -21,3 +21,5 @@ In tableprogress.h, don't use "using namespace std;"
 Replace i/j in table progress.h in lefalpha(string)
 
 Transfer 1D array to 2D array (good idea)
+
+
