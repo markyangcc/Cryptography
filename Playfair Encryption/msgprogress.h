@@ -1,15 +1,62 @@
-#include "tableprogress.h"
+#include <algorithm>
+#include <iostream>
 
-int main() {
-  cout << "Enter the plaintext: ";
-  string plaintxt;
-  getline(cin, plaintxt);
+using namespace std;
 
-  char cha;
-  char chb;
+std::string rmstr_isspace(std::string srcstr);
 
-    
+string msgprogress(string s) {
+  // maybe doesn't need to check if space exist in string again, it will cause
+  // consumption, traveling the string again
+  s = rmstr_isspace(s);  // remove space in string
 
+  char repchar = 'x';  // default fill character is 'x'
 
-  return 0;
+  char ch1;  // first paired character
+  char ch2;  // second paired character
+
+  for (int i = 0; i < (s.length() + 1) / 2; i++) {
+    bool flag = false;
+    for (int j = 0; j < s.length(); j = j + 2) {
+      ch1 = s[j];
+      ch2 = s[j + 1];
+
+      if (ch1 == ch2 && ch1 == 'x') {
+        repchar = 'q';
+        // change fill character to 'q'
+      }
+      if (ch1 == ch2 && ch1 == 'q') {
+        repchar = 'x';
+      }
+      if (ch1 == ch2) {
+        s.insert(j + 1, &repchar);
+        // cout << s << endl;
+        flag = true;
+      }
+      if (flag == true)
+        break;  // use flag to jump out of two nested loop directly
+    }
+  }
+
+  // make plaintet characters can be paired
+  if (s.length() % 2 != 0) {
+    // cout << "Append an character to string last position" << endl;
+
+    if (s[s.length() - 1] == 'x')
+      s += 'q';
+    else if (s[s.length() - 1] == 'q')
+      s += 'x';
+  }
+
+  return s;
+}
+
+std::string rmstr_isspace(std::string srcstr) {
+  std::string str = srcstr;
+
+  str.erase(std::remove_if(str.begin(), str.end(),
+                           [](unsigned char x) { return std::isspace(x); }),
+            str.end());
+
+  return str;
 }
