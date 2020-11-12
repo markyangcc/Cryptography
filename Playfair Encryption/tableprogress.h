@@ -4,11 +4,12 @@
 #include <set>
 #include <string>
 #include <vector>
+#include "somefunc.h"
 
 using namespace std;
 
-std::string rmstr_duplicates(std::string str);
-std::string rmstr_isspace(std::string str);
+ std::string rmstr_duplicates(std::string str);
+ std::string rmstr_isspace(std::string str);
 
 array<array<char, 5>, 5> build_table();
 
@@ -163,43 +164,43 @@ array<array<char, 5>, 5> build_table() {
   return table;
 }
 
-//---------------------------------------------------------------
-std::string rmstr_duplicates(std::string srcstr) {
-  std::string str = srcstr;
+// //---------------------------------------------------------------
+// std::string rmstr_duplicates(std::string srcstr) {
+//   std::string str = srcstr;
 
-  std::set<char> chars;
+//   std::set<char> chars;
 
-  str.erase(std::remove_if(str.begin(), str.end(),
-                           [&chars](char i) {
-                             // If encountered character, remove this one.
-                             if (chars.count(i)) {
-                               return true;
-                             }
+//   str.erase(std::remove_if(str.begin(), str.end(),
+//                            [&chars](char i) {
+//                              // If encountered character, remove this one.
+//                              if (chars.count(i)) {
+//                                return true;
+//                              }
 
-                             // Otherwise, mark this character encountered and
-                             // don't remove.
-                             chars.insert(i);
-                             return false;
-                           }),
-            str.end());
+//                              // Otherwise, mark this character encountered and
+//                              // don't remove.
+//                              chars.insert(i);
+//                              return false;
+//                            }),
+//             str.end());
 
-  str.erase(std::remove_if(str.begin(), str.end(),
-                           [](unsigned char x) { return std::isspace(x); }),
-            str.end());
+//   str.erase(std::remove_if(str.begin(), str.end(),
+//                            [](unsigned char x) { return std::isspace(x); }),
+//             str.end());
 
-  // test print statement
-  //   std::cout << str << '\n';
-  //   std::cout << srcstr << '\n';
+//   // test print statement
+//   //   std::cout << str << '\n';
+//   //   std::cout << srcstr << '\n';
 
-  return str;
-}
+//   return str;
+// }
 
-std::string rmstr_isspace(std::string srcstr) {
-  std::string str = srcstr;
+// std::string rmstr_isspace(std::string srcstr) {
+//   std::string str = srcstr;
 
-  str.erase(std::remove_if(str.begin(), str.end(),
-                           [](unsigned char x) { return std::isspace(x); }),
-            str.end());
+//   str.erase(std::remove_if(str.begin(), str.end(),
+//                            [](unsigned char x) { return std::isspace(x); }),
+//             str.end());
 
-  return str;
-}
+//   return str;
+// }

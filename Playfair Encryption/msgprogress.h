@@ -1,9 +1,10 @@
 #include <algorithm>
 #include <iostream>
+#include "somefunc.h"
 
 using namespace std;
 
-std::string rmstr_isspace(std::string srcstr);
+ std::string rmstr_isspace(std::string srcstr);
 
 string msgprogress(string s) {
   // maybe doesn't need to check if space exist in string again, it will cause
@@ -49,14 +50,4 @@ string msgprogress(string s) {
   }
 
   return s;
-}
-
-std::string rmstr_isspace(std::string srcstr) {
-  std::string str = srcstr;
-
-  str.erase(std::remove_if(str.begin(), str.end(),
-                           [](unsigned char x) { return std::isspace(x); }),
-            str.end());
-
-  return str;
 }
