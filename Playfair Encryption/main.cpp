@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "encryprogress.h"
 #include "msgprogress.h"
 #include "tableprogress.h"
 
@@ -22,9 +23,6 @@ int main() {
     }
     cout << endl;
   }
-
-  
-
 
   return 0;
 }
