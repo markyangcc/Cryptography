@@ -1,5 +1,5 @@
-#ifndef SOMEFUNC_H_
-#define SOMEFUNC_H_
+#ifndef DEPENDFUNC_H_
+#define DEPENDFUNC_H
 
 #include <algorithm>
 #include <set>

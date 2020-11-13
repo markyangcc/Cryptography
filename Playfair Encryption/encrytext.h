@@ -1,6 +1,3 @@
-#ifndef ENCRY_H_
-#define ENCRY_H_
-
 #include <array>
 #include <iostream>
 #include <string>
@@ -30,6 +27,8 @@ string encrytext(const string &groupedstr, array<array<char, 5>, 5> pftable) {
 
       encryedchars = locmapchar(swapedloc, pftable);
 
+      // contcatenates encryed characters into string
+
       encryedstr += get<0>(encryedchars);
       encryedstr += get<1>(encryedchars);
     }
@@ -39,8 +38,7 @@ string encrytext(const string &groupedstr, array<array<char, 5>, 5> pftable) {
 }
 
 tuple<int, int, int, int> swapcharsloc(tuple<int, int, int, int> loc) {
-  // rectangle
-
+  // rectangle shape
   if (get<0>(loc) != get<2>(loc) && get<1>(loc) != get<3>(loc)) {
     return make_tuple(get<0>(loc), get<3>(loc), get<2>(loc), get<1>(loc));
   }
@@ -81,5 +79,3 @@ tuple<char, char> locmapchar(tuple<int, int, int, int> loc,
   return make_tuple(table[get<0>(loc)][get<1>(loc)],
                     table[get<2>(loc)][get<3>(loc)]);
 }
-
-#endif
