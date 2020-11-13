@@ -3,6 +3,8 @@
 #include "encrytext.h"
 #include "maketable.h"
 #include "msgtreat.h"
+#include "dependfunc.h"
+
 
 int enplayfair() {
   array<array<char, 5>, 5> pftable{};

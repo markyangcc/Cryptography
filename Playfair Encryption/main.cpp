@@ -1,4 +1,3 @@
-#include "dependfunc.h"
 #include "playfair.h"
 
 int main() {
