@@ -25,7 +25,6 @@ int main() {
   }
 
   char ch1, ch2;
-  tuple<int, int, int, int> loc, swapedloc;
   tuple<char, char> encryedchars;
   string encryedstr;
   //---------------------------------------------------
@@ -36,11 +35,14 @@ int main() {
 
       cout << i << ' ' << ch1 << ch2 << " ";
 
-      loc = charmaploc(ch1, ch2, pftable);
-      swapedloc = encryprogress(loc);
-      encryedchars = locmapchar(swapedloc, pftable);
+      auto loc = charmaploc(ch1, ch2, pftable);
+      auto swapedloc = encryprogress(loc);
 
-      //  cout << get<0>(encryedchars) << get<1>(encryedchars) << "   ";
+      cout << "Swaped location:";
+      cout << get<0>(swapedloc) << get<1>(swapedloc) << get<2>(swapedloc)
+           << get<3>(swapedloc) << endl;
+
+      encryedchars = locmapchar(swapedloc, pftable);
 
       encryedstr = encryedstr + get<0>(encryedchars) + get<1>(encryedchars);
     }
