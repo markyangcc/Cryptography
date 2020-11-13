@@ -9,8 +9,6 @@
 
 using namespace std;
 
-std::string rmstr_duplicates(std::string str);
-std::string rmstr_isspace(std::string str);
 
 array<array<char, 5>, 5> build_table();
 
@@ -61,7 +59,7 @@ array<array<char, 5>, 5> build_table() {
   set<char> settarstr(begin(tarstr), end(tarstr));
 
   // clac symDifference set
-  set<char> v1 = alpha;
+  const set<char>& v1 = alpha;
   set<char> v2 = settarstr;
 
   // cout << "set_symmetric_difference" << endl;
@@ -74,8 +72,8 @@ array<array<char, 5>, 5> build_table() {
   // check size() to check if function works successed
   // cout << "symDifference size: " << symDifference.size() << endl;
 
-  vector<char> omitij = symDifference;
-  // cout << "omitij size: " << omitij.size() << endl;
+//  vector<char> omitij = symDifference;
+//  // cout << "omitij size: " << omitij.size() << endl;
 
   // std::find() Returns an iterator to the first element in the range
   // [first,last) that compares equal to val. If no such element is found, the
@@ -109,7 +107,7 @@ array<array<char, 5>, 5> build_table() {
 
   std::vector<char> tarlefstrvet(lefalpha.begin(), lefalpha.end());
   std::string tarlefstr(tarlefstrvet.begin(), tarlefstrvet.end());
-  string lefalphastr = tarlefstr;
+  const string& lefalphastr = tarlefstr;
   string keystr = tarstr + lefalphastr;
 
   cout << "---------------------------------------" << keystr << endl;

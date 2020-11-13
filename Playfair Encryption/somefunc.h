@@ -4,9 +4,10 @@
 #include <algorithm>
 #include <set>
 #include <string>
+#include <utility>
 
 std::string rmstr_duplicates(std::string srcstr) {
-  std::string str = srcstr;
+  std::string str = std::move(srcstr);
 
   std::set<char> chars;
 
@@ -36,7 +37,7 @@ std::string rmstr_duplicates(std::string srcstr) {
 }
 
 std::string rmstr_isspace(std::string srcstr) {
-  std::string str = srcstr;
+  std::string str = std::move(srcstr);
 
   str.erase(std::remove_if(str.begin(), str.end(),
                            [](unsigned char x) { return std::isspace(x); }),

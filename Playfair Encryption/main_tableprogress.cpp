@@ -1,7 +1,7 @@
 #include "tableprogress.h"
 
 int main() {
-  array<array<char, 5>, 5> pftable = {0};
+  array<array<char, 5>, 5> pftable;
   pftable = build_table();
 
   cout << "Main display:" << endl;

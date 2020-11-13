@@ -5,7 +5,6 @@
 
 using namespace std;
 
-std::string rmstr_isspace(std::string srcstr);
 
 string msgprogress(string s) {
   // maybe doesn't need to check if space exist in string again, it will cause
@@ -35,7 +34,7 @@ string msgprogress(string s) {
         // cout << s << endl;
         flag = true;
       }
-      if (flag == true)
+      if (flag)
         break;  // use flag to jump out of two nested loop directly
     }
   }
@@ -46,8 +45,8 @@ string msgprogress(string s) {
 
     if (s[s.length()] == 'x')
       s += 'q';
-    else if (s[s.length()] == 'q')
-      s += 'x';
+//    else if (s[s.length()] == 'q')
+//      s += 'x';
     else
       s += 'x';  // default append 'x'
   }
