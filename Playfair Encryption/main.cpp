@@ -10,7 +10,7 @@ int main() {
   pftable = build_table();
 
   cout << "Enter the plaintext: default helloworld" << endl;
-  string str = "helloworld";
+  string str = "hellworld";
   // getline(cin, str);
 
   string groupedstr = msgprogress(str);
@@ -25,23 +25,29 @@ int main() {
   }
 
   char ch1, ch2;
-  tuple<int, int, int, int> loctu, encryedtu;
-  tuple<char, char> encrytu;
+  tuple<int, int, int, int> loc, swapedloc;
+  tuple<char, char> encryedchars;
+  string encryedstr;
   //---------------------------------------------------
-  for (int i = 0; i < (str.length() + 1) / 2; i++) {
-    bool flag = false;
-    for (int j = 0; j < str.length(); j = j + 2) {
-      ch1 = str[j];
-      ch2 = str[j + 1];
+  for (int i = 0; i < groupedstr.length(); i = i + 2) {
+    {
+      ch1 = groupedstr[i];
+      ch2 = groupedstr[i + 1];
 
-      loctu = charmaploc(ch1, ch2, pftable);
-      encryedtu = encryprogress(loctu);
-      locmapchar(loctu, pftable);
+      cout << i << ' ' << ch1 << ch2 << " ";
 
-      if (flag == true)
-        break;  // use flag to jump out of two nested loop directly
+      loc = charmaploc(ch1, ch2, pftable);
+      swapedloc = encryprogress(loc);
+      encryedchars = locmapchar(swapedloc, pftable);
+
+      //  cout << get<0>(encryedchars) << get<1>(encryedchars) << "   ";
+
+      encryedstr = encryedstr + get<0>(encryedchars) + get<1>(encryedchars);
     }
   }
+
+  cout << endl << "Encryed text: " << endl;
+  cout << encryedstr << endl;
 
   return 0;
 }

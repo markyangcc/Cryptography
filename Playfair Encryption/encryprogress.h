@@ -35,22 +35,33 @@ using namespace std;
 // ugly code......
 tuple<int, int, int, int> encryprogress(tuple<int, int, int, int> loc) {
   // rectangle
+
+  tuple<int, int, int, int> location;
+
+  cout << get<0>(loc) << get<3>(loc) << get<0>(loc) << get<3>(loc) << endl;
+
   if (get<0>(loc) != get<2>(loc) && get<1>(loc) != get<3>(loc)) {
-    return make_tuple(get<0>(loc), get<3>(loc), get<0>(loc), get<3>(loc));
+    location = make_tuple(get<0>(loc), get<3>(loc), 
+                          get<2>(loc), get<1>(loc));
+    return location;
   }
   // on the same row
   else if (get<0>(loc) == get<2>(loc) && get<1>(loc) != get<3>(loc)) {
-    return make_tuple(get<0>(loc), (get<1>(loc) + 1) % 5, get<2>(loc),
-                      (get<3>(loc) + 1) % 5);
+    location = make_tuple(get<0>(loc), (get<1>(loc) + 1) % 5, 
+                          get<2>(loc), (get<3>(loc) + 1) % 5);
+    return location;
 
     // on the same col
   } else if (get<0>(loc) != get<2>(loc) && get<1>(loc) == get<3>(loc)) {
-    return make_tuple((get<0>(loc) + 1) % 5, get<1>(loc), (get<2>(loc) + 1) % 5,
-                      (get<3>(loc) + 1) % 5);
+    location = make_tuple((get<0>(loc) + 1) % 5, get<1>(loc),
+                          (get<2>(loc) + 1) % 5, get<3>(loc));
+
+    return location;
   }
   // default return 0,0,0,0
   else {
-    return make_tuple(0, 0, 0, 0);
+    location = make_tuple(0, 0, 0, 0);
+    return location;
   }
 }
 

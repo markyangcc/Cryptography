@@ -23,7 +23,7 @@ array<array<char, 5>, 5> build_table() {
   // getline(cin, key);
 
   cout << "Default key: Playfair example" << endl;
-  string key = "Playfair example";
+  string key = "ballon";
 
   // make std key
   // TODO: try replace set to unordered_set to relize same funcrion, to

@@ -1,10 +1,11 @@
 #include <algorithm>
 #include <iostream>
+
 #include "somefunc.h"
 
 using namespace std;
 
- std::string rmstr_isspace(std::string srcstr);
+std::string rmstr_isspace(std::string srcstr);
 
 string msgprogress(string s) {
   // maybe doesn't need to check if space exist in string again, it will cause
@@ -43,10 +44,12 @@ string msgprogress(string s) {
   if (s.length() % 2 != 0) {
     // cout << "Append an character to string last position" << endl;
 
-    if (s[s.length() - 1] == 'x')
+    if (s[s.length()] == 'x')
       s += 'q';
-    else if (s[s.length() - 1] == 'q')
+    else if (s[s.length()] == 'q')
       s += 'x';
+    else
+      s += 'x';  // default append 'x'
   }
 
   return s;
