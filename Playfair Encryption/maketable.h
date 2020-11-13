@@ -12,7 +12,7 @@ using namespace std;
 array<array<char, 5>, 5> build_table(string key = "ballon") {
   array<array<char, 5>, 5> table = {0};
 
-  cout << "Default key(ballon):" << key << endl;
+  cout << "Entered key: " << key << endl;
 
   // make std key
   // TODO: try replace set to unordered_set to relize same funcrion, to
@@ -51,17 +51,17 @@ array<array<char, 5>, 5> build_table(string key = "ballon") {
   // handle i/j problems
   if (settarstr.find('i') != settarstr.end() &&
       settarstr.find('j') != settarstr.end()) {
-    cout << "Found i and j in target str" << endl;
+    cout << endl << "Found i and j in target str" << endl;
     settarstr.erase('j');
   } else if (settarstr.find('i') != settarstr.end() &&
              settarstr.find('j') == settarstr.end()) {
-    cout << "Found i, but not dound j in target str" << endl;
+    cout << endl << "Found i, but not dound j in target str" << endl;
 
     lefalpha.erase('j');
 
   } else if (settarstr.find('j') != settarstr.end() &&
              settarstr.find('i') == settarstr.end()) {
-    cout << "Found j, but not dound i in target str" << endl;
+    cout << endl << "Found j, but not dound i in target str" << endl;
 
     // TODO: replace j to i in tarstr
     // tarstr.replace('j', 'i'); and find()
@@ -69,7 +69,7 @@ array<array<char, 5>, 5> build_table(string key = "ballon") {
     lefalpha.erase('i');
 
   } else {
-    cout << "Not found i or j in target str" << endl;
+    cout << endl << "Not found i or j in target str" << endl;
     lefalpha.erase('j');
   }
 
@@ -78,7 +78,7 @@ array<array<char, 5>, 5> build_table(string key = "ballon") {
   const string& lefalphastr = tarlefstr;
   string keystr = tarstr + lefalphastr;
 
-  cout << "Generated key: " << keystr << endl;
+  cout << "Generated table: " << keystr << endl;
 
   std::vector<char> keystrvet(keystr.begin(), keystr.end());
 
