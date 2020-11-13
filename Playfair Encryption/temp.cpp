@@ -1,32 +1,22 @@
 #include <iostream>
-#include <utility>
+#include <tuple>
 
-const size_t N = 3;
-
-std::pair<size_t, size_t> find_position(const int (&a)[N][N], int value) {
-  size_t row = 0;
-  size_t col = 0;
-
-  for (; row < N; row++) {
-    col = 0;
-    while (col < N && a[row][col] != value) col++;
-    if (col != N) break;
-  }
-
-  return {row, col};
-}
-
+using namespace std;
+tuple<int, int, int> tu();
 int main() {
-  int a[N][N] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+  tuple<int, int, int> tumain;
 
-  int value = 9;
+  tumain = make_tuple(1, 2, 3);
 
-  auto position = find_position(a, value);
-
-  if (position.first != N) {
-    std::cout << "Row = " << position.first << ", Column = " << position.second
-              << std::endl;
-  }
+  cout << get<2>(tumain);
 
   return 0;
+}
+
+tuple<int, int, int> tu() {
+  tuple<int, int, int> temp;
+
+  temp = make_tuple(0, 0, 1);
+
+  return temp;
 }

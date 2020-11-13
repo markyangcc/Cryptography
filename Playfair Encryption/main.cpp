@@ -9,9 +9,9 @@ int main() {
 
   pftable = build_table();
 
-  cout << "Enter the plaintext: ";
+  cout << "Enter the plaintext: default helloworld" << endl;
   string str = "helloworld";
-  getline(cin, str);
+  // getline(cin, str);
 
   string groupedstr = msgprogress(str);
   cout << "The grouped str is: " << groupedstr << endl << endl;
@@ -22,6 +22,25 @@ int main() {
       cout << pftable[i][j];
     }
     cout << endl;
+  }
+
+  char ch1, ch2;
+  tuple<int, int, int, int> loctu, encryedtu;
+  tuple<char, char> encrytu;
+  //---------------------------------------------------
+  for (int i = 0; i < (str.length() + 1) / 2; i++) {
+    bool flag = false;
+    for (int j = 0; j < str.length(); j = j + 2) {
+      ch1 = str[j];
+      ch2 = str[j + 1];
+
+      loctu = charmaploc(ch1, ch2, pftable);
+      encryedtu = encryprogress(loctu);
+      locmapchar(loctu, pftable);
+
+      if (flag == true)
+        break;  // use flag to jump out of two nested loop directly
+    }
   }
 
   return 0;

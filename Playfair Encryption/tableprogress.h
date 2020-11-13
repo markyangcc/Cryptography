@@ -4,12 +4,13 @@
 #include <set>
 #include <string>
 #include <vector>
+
 #include "somefunc.h"
 
 using namespace std;
 
- std::string rmstr_duplicates(std::string str);
- std::string rmstr_isspace(std::string str);
+std::string rmstr_duplicates(std::string str);
+std::string rmstr_isspace(std::string str);
 
 array<array<char, 5>, 5> build_table();
 
@@ -17,9 +18,12 @@ array<array<char, 5>, 5> build_table() {
   array<array<char, 5>, 5> table = {0};
 
   // get user input
-  cout << "Enter the key: ";
-  string key;
-  getline(cin, key);
+  // cout << "Enter the key: ";
+  // string key;
+  // getline(cin, key);
+
+  cout << "Default key: Playfair example" << endl;
+  string key = "Playfair example";
 
   // make std key
   // TODO: try replace set to unordered_set to relize same funcrion, to
@@ -177,7 +181,8 @@ array<array<char, 5>, 5> build_table() {
 //                                return true;
 //                              }
 
-//                              // Otherwise, mark this character encountered and
+//                              // Otherwise, mark this character encountered
+//                              and
 //                              // don't remove.
 //                              chars.insert(i);
 //                              return false;
