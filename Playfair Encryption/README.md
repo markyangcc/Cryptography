@@ -34,6 +34,7 @@ This is a small project, but it make me have a better grasp of C++ syntax d lear
 ```bash
 OS  : Ubuntu 20.10 64-bit
 Compiler : g++ (version 10.2.0)
+C++ standard ：C11
 ```
 ### Bright spots
 
