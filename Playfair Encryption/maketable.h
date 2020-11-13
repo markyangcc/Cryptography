@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "somefunc.h"
+#include "dependfunc.h"
 
 using namespace std;
 

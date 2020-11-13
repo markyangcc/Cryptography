@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <iostream>
 
-#include "somefunc.h"
+#include "dependfunc.h"
 
 using namespace std;
 
