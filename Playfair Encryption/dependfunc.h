@@ -5,7 +5,6 @@
 #include <set>
 #include <string>
 
-
 std::string rmstr_duplicates(std::string srcstr) {
   std::string str = std::move(srcstr);
 
@@ -28,10 +27,6 @@ std::string rmstr_duplicates(std::string srcstr) {
   str.erase(std::remove_if(str.begin(), str.end(),
                            [](unsigned char x) { return std::isspace(x); }),
             str.end());
-
-  // test print statement
-  //   std::cout << str << '\n';
-  //   std::cout << srcstr << '\n';
 
   return str;
 }

@@ -5,11 +5,8 @@
 
 using namespace std;
 
-
 string msgprogress(string s) {
-  // maybe doesn't need to check if space exist in string again, it will cause
-  // consumption, traveling the string again
-  s = rmstr_isspace(s);  // remove space in string
+    s = rmstr_isspace(s);  // remove space in string
 
   char repchar = 'x';  // default fill character is 'x'
 
@@ -34,21 +31,18 @@ string msgprogress(string s) {
         // cout << s << endl;
         flag = true;
       }
-      if (flag)
-        break;  // use flag to jump out of two nested loop directly
+      if (flag) break;  // use flag to jump out of two nested loop directly
     }
   }
 
-  // make plaintet characters can be paired
+  // make all treated text characters can be paired
   if (s.length() % 2 != 0) {
     // cout << "Append an character to string last position" << endl;
 
     if (s[s.length()] == 'x')
       s += 'q';
-//    else if (s[s.length()] == 'q')
-//      s += 'x';
     else
-      s += 'x';  // default append 'x'
+      s += 'x';  // then append 'x'
   }
 
   return s;

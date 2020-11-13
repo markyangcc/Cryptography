@@ -7,14 +7,19 @@
 int main() {
   array<array<char, 5>, 5> pftable{};
 
-  pftable = build_table();
+  // get user input
+  cout << "Enter the key: ";
+  string key;
+  getline(cin, key);
 
-  cout << "Enter the plaintext: default helloworld" << endl;
-  string str = "hellworld";
-  // getline(cin, str);
+  pftable = build_table(key);
 
-  string groupedstr = msgprogress(str);
-  cout << "The grouped str is: " << groupedstr << endl << endl;
+  cout << "Enter the plaintext(default \"hello world\"): " << endl;
+  string str = "hello world";
+  getline(cin, str);
+  string treatedstr = msgprogress(str);
+
+  cout << "The treated string: " << treatedstr << endl << endl;
 
   cout << "Table display:" << endl;
   for (int i = 0; i < 5; i++) {
@@ -24,7 +29,7 @@ int main() {
     cout << endl;
   }
 
-  string aftertext = encrytext(groupedstr, pftable);
+  string aftertext = encrytext(treatedstr, pftable);
 
   cout << aftertext << endl;
 
