@@ -1,5 +1,5 @@
 # VSC Workspace configuration
-vscode/
+.vscode/
 
 # CMake build
 build/
