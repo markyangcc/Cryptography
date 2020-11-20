@@ -4,5 +4,8 @@ vscode/
 # CMake build
 build/
 
+# Miracl Library
+miracl.h mirdef.h miracl.a
+
 # Executable files
 main
