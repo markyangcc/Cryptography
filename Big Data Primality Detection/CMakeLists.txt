@@ -4,7 +4,7 @@ project(Big_Data_Primality VERSION 0.1.0)
 include(CTest)
 enable_testing()
 
-set (CMAKE_C_STANDARD 99)
+set (CMAKE_C_STANDARD 11)
 
 add_executable(Big_Data_Primality main.c)
 
