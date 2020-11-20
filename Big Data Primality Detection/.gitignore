@@ -1,0 +1,8 @@
+# VSC Workspace configuration
+vscode/
+
+# CMake build
+build/
+
+# Executable files
+main
