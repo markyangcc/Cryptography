@@ -5,7 +5,9 @@ vscode/
 build/
 
 # Miracl Library
-miracl.h mirdef.h miracl.a
+miracl.h
+mirdef.h
+miracl.a
 
 # Executable files
 main
