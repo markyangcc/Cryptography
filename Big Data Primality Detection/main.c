@@ -4,21 +4,26 @@
 #include <time.h>
 
 #include "miracl.h"
+
 #define round 6
+
 int Fermatjdu_prime(big obj);
 
 int main(void) {
   FILE *fp;
   big obj;
-  miracl *mip = mirsys(
-      1500,
-      16);  //定义的这些变量最大长度都是5000位（这个位是后面进制的位数），输入、输出、运算用的进制都是16进制。
+
+  // mip: Miracl Instance Pointer
+  // mirsys(num_of_digits, num_base)
+  miracl *mip = mirsys(3000, 16);//每次使用变量的位数(不能小于所求)，16表示数字进制
   mip->IOBASE = 16;
+
   obj = mirvar(0);  //初始化变量obj，obj是输入的需要判断是否为素数的大数
   if ((fp = fopen("data.txt", "r+")) == NULL) {
     printf("Open the file failure...\n");
     exit(0);
   }                    //判断文件是否能够正确打开
+  
   while (!feof(fp)) {  //检测文件结束符
     cinnum(obj,
            fp);  //从文件中读取一个数字进入，并将其强制转化为十六进制表的大数obj
