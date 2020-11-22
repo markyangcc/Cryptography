@@ -22,8 +22,8 @@ int main() {
   // size of big/flash numbers in 8-bit bytes
   // nb The number base docs:5
   miracl* mip = mirsys(500, 10);  // This initialises the MIRACL system to
-                                   // use 1500 decimal digits for each
-                                   // big or flash number
+                                  // use 1500 decimal digits for each
+                                  // big or flash number
 
   if ((fp = fopen("data.txt", "r+")) == NULL) {
     fprintf(stderr, "fopen() failed in file %s at line # %d", __FILE__,
@@ -46,10 +46,10 @@ int main() {
 
     // Output
     if (fermat_primality_test(p) == true) {
-      printf("p is %6.4lf%% prime\n", 100 * (1 - pow(0.5, K)));
+      printf("\np有 %6.4lf%% 概率是素数\n", 100 * (1 - pow(0.5, K)));
     }
     if (fermat_primality_test(p) == false) {
-      printf("p is a composite\n");
+      printf("\np是合数\n");
     }
   }
   fclose(fp);
@@ -60,9 +60,9 @@ int main() {
 }
 
 bool fermat_primality_test(big p) {
-  big a = mirvar(0);  //生成一个随机数
-  big pminus1 = mirvar(0);
-  big pminus2 = mirvar(0);
+  big a = mirvar(0);          //随机选取的数
+  big pminus1 = mirvar(0);    // p-1
+  big pminus2 = mirvar(0);    // p-2
   big mgcd = mirvar(0);       //最大公因数
   big rval = mirvar(0);       //模幂运算返回值
   big constnum1 = mirvar(1);  //常数1
@@ -90,7 +90,7 @@ bool fermat_primality_test(big p) {
 
     // int compare* (big x, big y)
     // returns: +1 if x > y; 0 if x = y; -1 if x < y
-    //判断obj和随机数是否互素，它们的最大公因数如果不是1的话，compare函数将会返回1，不满足条件
+    //判断p和随机数是否互素，若互素，则最大公因数mgcd为1
     if (mr_compare(mgcd, constnum1) == 0) {
       /* 随机选取整数b,2<=b<=n-2;
       计算rval≡b^(n-1)(mod n);
@@ -110,7 +110,7 @@ bool fermat_primality_test(big p) {
       // w = xy (mod n)
       powmod(a, pminus1, p, rval);  //如果rval=1，则p可能是素数
 
-      // j是判断因子，如果一个数能够满足在当前的轮数下，满足上述的算法，则j能够计数；如果j不等于轮数，那么这个数就不是素数
+      // j计数，有多少轮结果出来是素数
       if (mr_compare(rval, constnum1) == 0) {
         j++;
       }

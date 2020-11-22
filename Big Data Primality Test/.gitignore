@@ -1,9 +1,6 @@
 # VSC Workspace configuration
 .vscode/
 
-# CMake build
-build/
-
 # Miracl Library
 miracl.h
 mirdef.h
