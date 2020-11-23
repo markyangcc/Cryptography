@@ -17,11 +17,11 @@ class Caesa {
   void set_ciphertext(std::string str);
   void set_shift(int val);
 
-  std::string encrypt(const std::string &str, const int shift);
-  std::string decrypt(const std::string &str, const int shift);
+  void encrypt();
+  void decrypt();
 
-  std::string get_plaintext();
-  std::string get_ciphertext();
+  std::string &get_plaintext();
+  std::string &get_ciphertext();
   int get_shift();
 };
 

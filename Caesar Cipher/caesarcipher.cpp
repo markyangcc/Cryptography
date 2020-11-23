@@ -17,31 +17,23 @@ void Caesa::set_plaintext(std::string str) { plaintext = str; }
 void Caesa::set_ciphertext(std::string str) { ciphertext = str; }
 void Caesa::set_shift(int val) { shift = val; }
 
-std::string Caesa::get_plaintext() { return plaintext; }
-std::string Caesa::get_ciphertext() { return ciphertext; }
+std::string &Caesa::get_plaintext() { return plaintext; }
+std::string &Caesa::get_ciphertext() { return ciphertext; }
 int Caesa::get_shift() { return shift; }
 
-std::string Caesa::encrypt(const std::string &str, const int shift) {
-  std::string encryptedstr;
+void Caesa::encrypt() {
+  for (int i = 0; i < plaintext.size(); i++) {
+    char lowerchar = tolower(plaintext[i]);
 
-  for (int i = 0; i < str.size(); i++) {
-    char lowerchar = tolower(str[i]);
-
-    encryptedstr.push_back(static_cast<char>(
+    ciphertext.push_back(static_cast<char>(
         ((static_cast<int>(lowerchar - 'a') + shift) % 26) + 'a'));
   }
-
-  return encryptedstr;
 }
-std::string Caesa::decrypt(const std::string &str, const int shift) {
-  std::string decryptedstr;
+void Caesa::decrypt() {
+  for (int i = 0; i < ciphertext.size(); i++) {
+    char lowerchar = tolower(ciphertext[i]);
 
-  for (int i = 0; i < str.size(); i++) {
-    char lowerchar = tolower(str[i]);
-
-    decryptedstr.push_back(static_cast<char>(
+    plaintext.push_back(static_cast<char>(
         ((static_cast<int>(lowerchar - 'a') + (26 - shift)) % 26) + 'a'));
   }
-
-  return decryptedstr;
 }

@@ -1,7 +1,7 @@
 #include <iostream>
 // #include <string>
 
-#include "caesarcipher.h"
+#include "caesarcipher.cpp"
 
 int main() {
   Caesa caesa_cipher;
@@ -11,8 +11,18 @@ int main() {
   std::cin >> str;
   caesa_cipher.set_plaintext(str);
 
-  caesa_cipher.encrypt(caesa_cipher.get_ciphertext(), caesa_cipher.get_shift());
+  std::cout << "Enter shift number: ";
+  int num;
+  std::cin >> num;
+  caesa_cipher.set_shift(num);
 
+  std::cout << caesa_cipher.get_plaintext().size() << std::endl;
+
+  caesa_cipher.encrypt();
+
+  std::cout << caesa_cipher.get_plaintext() << std::endl
+            << caesa_cipher.get_ciphertext() << std::endl
+            << caesa_cipher.get_shift() << std::endl;
 
   return 0;
 }
