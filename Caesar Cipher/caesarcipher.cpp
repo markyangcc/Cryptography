@@ -5,14 +5,23 @@
 // decrypt： f(a)=(a+(26-N)) mod 26
 // a: character  N: shift(most of time it's 3)
 // ---------------------------------------------------
-
 #include "caesarcipher.h"
 
-CAESA::CAESA() = default;
+#include <iostream>
 
-CAESA::~CAESA() = default;
+Caesa::Caesa() = default;
 
-std::string CAESA::encrypt(const std::string &str, const int shift) {
+Caesa::~Caesa() = default;
+
+void Caesa::set_plaintext(std::string str) { plaintext = str; }
+void Caesa::set_ciphertext(std::string str) { ciphertext = str; }
+void Caesa::set_shift(int val) { shift = val; }
+
+std::string Caesa::get_plaintext() { return plaintext; }
+std::string Caesa::get_ciphertext() { return ciphertext; }
+int Caesa::get_shift() { return shift; }
+
+std::string Caesa::encrypt(const std::string &str, const int shift) {
   std::string encryptedstr;
 
   for (int i = 0; i < str.size(); i++) {
@@ -24,7 +33,7 @@ std::string CAESA::encrypt(const std::string &str, const int shift) {
 
   return encryptedstr;
 }
-std::string CAESA::decrypt(const std::string &str, const int shift) {
+std::string Caesa::decrypt(const std::string &str, const int shift) {
   std::string decryptedstr;
 
   for (int i = 0; i < str.size(); i++) {
