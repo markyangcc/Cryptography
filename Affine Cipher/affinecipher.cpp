@@ -12,6 +12,7 @@
 
 #include "affinecipher.h"
 
+#include <algorithm>
 #include <iostream>
 
 Affine::Affine() = default;
@@ -29,19 +30,38 @@ int Affine::get_key() { return key; }
 int Affine::get_shift() { return shift; }
 
 void Affine::encrypt() {
-  for (int i = 0; i < plaintext.size(); i++) {
-    char lowerchar = tolower(plaintext[i]);
+  // Only when key is reciprocal to 26 is a modulo-reversible, in other words,
+  // the affine cipher is reversible (can be both encrypted and decrypted).
+  if (std::__gcd(key, 26) == 1) {
+    for (int i = 0; i < plaintext.size(); i++) {
+      char lowerchar = tolower(plaintext[i]);
 
-    ciphertext.push_back(static_cast<char>(
-        ((key * (static_cast<int>(lowerchar - 'a')) + shift) % 26) + 'a'));
+      ciphertext.push_back(static_cast<char>(
+          ((key * (static_cast<int>(lowerchar - 'a')) + shift) % 26) + 'a'));
+    }
   }
 }
 void Affine::decrypt() {
-  for (int i = 0; i < ciphertext.size(); i++) {
-    char lowerchar = tolower(ciphertext[i]);
+  int coprimeval;
+  for (int i = 0; i < 26; i++) {
+    if (((i * key) % 26) == 1) coprimeval = i;
+  }
 
-    plaintext.push_back(static_cast<char>(
-        (((key* key) * ((static_cast<int>(lowerchar - 'a')) - shift)) % 26) +
-        'a'));
+  // The greatest common divisor（gcd） is equal to 1, then prove that the two
+  // numbers are relatively prime
+  if (std::__gcd(key, 26) == 1) {
+    for (int i = 0; i < ciphertext.size(); i++) {
+      char lowerchar = tolower(ciphertext[i]);
+      // If the result of multiplying a, b by 26 modulo is 1, then b is the
+      // modulo-inverse of a
+      // a--key, b ---mod_val
+      int mod_val =
+          (coprimeval * ((static_cast<int>(lowerchar - 'a')) - shift)) % 26;
+      // make c++ % operator result be positive, when one num is negative and
+      // the other is positive, to meet the demand
+      if (mod_val < 0) mod_val += 26;
+
+      plaintext.push_back(static_cast<char>(mod_val + 'a'));
+    }
   }
 }
