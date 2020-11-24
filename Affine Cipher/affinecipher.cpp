@@ -1,39 +1,47 @@
 //
 //                      Description
 //
-// encrypt： f(a)=(a+N) mod 26
-// decrypt： f(a)=(a+(26-N)) mod 26
-// a: character  N: shift(most of time it's 3)
-// ---------------------------------------------------
+// Encryption function： E(x)=(ax+b) mod m
+// Decryption function: D(x)=a^-1(x-b)mod m
+// modulus m is the size of the alphabet and a and b are the keys of the cipher.
+// The value a must be chosen such that a and m are coprime.
+//
+// The Caesar cipher is an Affine cipher with a = 1,
+// since the encrypting function simply reduces to a linear shift. ----wikipedia
+// -------------------------------------------------------------------------------
+
 #include "affinecipher.h"
 
 #include <iostream>
 
-Caesa::Caesa() = default;
+Affine::Affine() = default;
 
-Caesa::~Caesa() = default;
+Affine::~Affine() = default;
 
-void Caesa::set_plaintext(std::string str) { plaintext = str; }
-void Caesa::set_ciphertext(std::string str) { ciphertext = str; }
-void Caesa::set_shift(int val) { shift = val; }
+void Affine::set_plaintext(std::string str) { plaintext = str; }
+void Affine::set_ciphertext(std::string str) { ciphertext = str; }
+void Affine::set_key(int val) { key = val; }
+void Affine::set_shift(int val) { shift = val; }
 
-std::string &Caesa::get_plaintext() { return plaintext; }
-std::string &Caesa::get_ciphertext() { return ciphertext; }
-int Caesa::get_shift() { return shift; }
+std::string &Affine::get_plaintext() { return plaintext; }
+std::string &Affine::get_ciphertext() { return ciphertext; }
+int Affine::get_key() { return key; }
+int Affine::get_shift() { return shift; }
 
-void Caesa::encrypt() {
+void Affine::encrypt() {
   for (int i = 0; i < plaintext.size(); i++) {
     char lowerchar = tolower(plaintext[i]);
 
     ciphertext.push_back(static_cast<char>(
-        ((static_cast<int>(lowerchar - 'a') + shift) % 26) + 'a'));
+        ((key * (static_cast<int>(lowerchar - 'a')) + shift) % 26) + 'a'));
   }
 }
-void Caesa::decrypt() {
+void Affine::decrypt() {
   for (int i = 0; i < ciphertext.size(); i++) {
     char lowerchar = tolower(ciphertext[i]);
 
     plaintext.push_back(static_cast<char>(
-        ((static_cast<int>(lowerchar - 'a') + (26 - shift)) % 26) + 'a'));
+        (((key* key) * ((static_cast<int>(lowerchar - 'a')) - shift)) % 26) +
+        'a'));
   }
 }
