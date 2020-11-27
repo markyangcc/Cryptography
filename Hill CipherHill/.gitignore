@@ -2,4 +2,6 @@
 .vscode
 
 # drive and test funcs
-main test temp
+main
+test
+temp
