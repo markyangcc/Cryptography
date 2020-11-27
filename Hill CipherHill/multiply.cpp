@@ -2,7 +2,6 @@
 #include <vector>
 
 using namespace std;
-
 using matrix = std::vector<std::vector<int>>;
 
 matrix multiply(const matrix& m1, const matrix& m2);
