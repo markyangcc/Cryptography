@@ -1,6 +1,8 @@
 #include <iostream>
 #define N 4
+
 using namespace std;
+
 void findCoFactor(int mat[N][N], int mat2[N][N], int p, int q, int n) {
   int i = 0, j = 0;
   for (int row = 0; row < n; row++) {
@@ -15,6 +17,7 @@ void findCoFactor(int mat[N][N], int mat2[N][N], int p, int q, int n) {
     }
   }
 }
+
 int getDeterminant(int mat[N][N], int n) {
   int determinant = 0;
   if (n == 1) return mat[0][0];
@@ -27,12 +30,14 @@ int getDeterminant(int mat[N][N], int n) {
   }
   return determinant;
 }
+
 bool isMatrixInvertible(int mat[N][N], int n) {
   if (getDeterminant(mat, N) != 0)
     return true;
   else
     return false;
 }
+
 int main() {
   int matrix[N][N] = {{1, 0, 2, -1}, {3, 0, 0, 5}, {2, 1, 4, -3}, {1, 0, 5, 0}};
   if (isMatrixInvertible(matrix, N))
