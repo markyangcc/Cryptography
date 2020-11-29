@@ -10,7 +10,7 @@
 .history/
 
 # Eigen Lib
-Eigen
+Eigen/
 
 # Drive and test funcs
 main
