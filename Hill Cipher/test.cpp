@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include <vector>
 
 #include "Eigen/Dense"
 
@@ -6,20 +8,49 @@ using namespace Eigen;
 using namespace std;
 
 int main() {
+  // get message
+  cout << "Enter message to be encrypted: ";
+  string plaintext;
+  cin >> plaintext;
+
+  // map char to int
+  vector<int> vec;
+  for (int i = 0; i < plaintext.size(); i++) {
+    vec.push_back((plaintext[i] - 'a'));
+  }
+
   int msg_row, msg_col;
-  msg_row = 3, msg_col = 1;
+  msg_row = plaintext.size(), msg_col = 1;
   MatrixXd msg_matrix(msg_row, msg_col);
-  msg_matrix << 0, 2, 19;
+
+  for (int i = 0; i < msg_matrix.rows(); i++)
+    for (int j = 0; j < msg_matrix.cols(); j++) {
+      msg_matrix(i, j) = vec[i * msg_col + j];
+    }
+
   // cout << "msg_matrix: " << endl << msg_matrix << endl;
 
-  int key_row, key_col;
-  key_row = 3, key_col = 3;
+  int key_col = msg_row;
+  int key_row = key_col;
+  // the key_matrix must invertible， otherwise it cannot be decrypted
   MatrixXd key_matrix(key_row, key_col);
-  key_matrix << 6, 24, 1, 13, 16, 10, 20, 17, 15;
 
-  // Confirm it is reversible
+  // cout << key_row << " " << key_col << endl;
+  cout << "Enter the key matrix(" << key_row << "*" << key_col
+       << "), each row a new line: " << endl;
+
+  int num;
+  for (int i = 0; i < key_matrix.rows(); i++)
+    for (int j = 0; j < key_matrix.cols(); j++) {
+      cin >> num;
+      key_matrix(i, j) = num;
+    }
+
+  cout << "key_matrix: " << endl << key_matrix << endl;
+
+  // Confirm it is invertible (if not  invertible, can not decrypt)
   if (key_matrix.determinant() == 0) {
-    cout << "The key matrix is not reversible" << endl;
+    cout << "The key matrix is not invertible" << endl;
     cout << "The determinant value is : " << key_matrix.determinant() << endl;
   }
 
@@ -29,13 +60,37 @@ int main() {
   // right matrix.
   int encrypted_row = msg_row;
   int encrypted_col = key_col;
-  MatrixXd encrypted_matrix(msg_row, msg_col);
+  MatrixXd encrypted_matrix(encrypted_row, encrypted_col);
   // A matrix can be multiplied only if the number of columns of the left
   // matrix is equal to the number of rows of the right matrix.
   if (key_matrix.cols() == msg_matrix.rows()) {
     encrypted_matrix = key_matrix * msg_matrix;
   }
-  cout << encrypted_matrix << endl;
+  // cout << "-------------" << endl;
+  // cout << "msg:" << endl << msg_matrix << endl;
+  // cout << "key:" << endl << key_matrix << endl;
+  // cout << "ency:" << endl << encrypted_matrix << endl;
+  // cout << "-------------" << endl;
+
+  // cout << encrypted_matrix.rows() << " " << encrypted_matrix.cols() << endl;
+
+  vector<int> int_vec;
+
+  for (int i = 0; i < encrypted_matrix.rows(); i++)
+    for (int j = 0; j < encrypted_matrix.cols(); j++) {
+      int_vec.push_back(encrypted_matrix(i, j));
+    }
+
+  vector<char> char_vec;
+
+  for (auto i : int_vec) {
+    i = i % 26;
+    char_vec.push_back(char(i + 'a'));
+  }
+
+  cout << "Encrypted text: ";
+  for (auto i : char_vec) cout << i;
+  cout << endl;
 
   return 0;
 }
