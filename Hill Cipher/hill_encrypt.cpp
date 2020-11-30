@@ -7,7 +7,7 @@
 using namespace Eigen;
 using namespace std;
 
-string encrypt(string str) {
+vector<int> encrypt(string str) {
   // map char to int
   vector<int> vec;
   for (int i = 0; i < str.size(); i++) {
@@ -69,6 +69,7 @@ string encrypt(string str) {
 
   // cout << encrypted_matrix.rows() << " " << encrypted_matrix.cols() << endl;
 
+  cout << "Encr: " << endl << encrypted_matrix << endl;
   vector<int> int_vec;
 
   for (int i = 0; i < encrypted_matrix.rows(); i++)
@@ -76,11 +77,5 @@ string encrypt(string str) {
       int_vec.push_back(encrypted_matrix(i, j));
     }
 
-  string ret_str;
-  for (auto i : int_vec) {
-    i = i % 26;
-    ret_str.push_back(char(i + 'a'));
-  }
-
-  return ret_str;
+  return int_vec;
 }

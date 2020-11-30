@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Eigen/Eigen"
+#include "hill_decrypt.cpp"
 #include "hill_encrypt.cpp"
 
 using namespace Eigen;
@@ -14,16 +15,27 @@ int main() {
   string plaintext;
   cin >> plaintext;
 
-  string encryptedstr = encrypt(plaintext);
+  vector<int> encryptedvec = encrypt(plaintext);
 
-  cout << "Encrypted text: " << encryptedstr << endl << endl;
-
+  string encryptedstr;
+  for (auto i : encryptedvec) {
+    i = i % 26;
+    encryptedstr.push_back(char(i + 'a'));
+  }
+  cout << "Encrypted text: ";
+  cout << encryptedstr << endl << endl;
   cout << "--------------------------------------" << endl;
 
-  cout << "Enter the ciphertext to be decrypted: ";
-  string ciphertext;
-  cin >> ciphertext;
+  cout << "Enter the cipher numbers to be decrypted: ";
+  vector<int> ciphervec;
+  int temp;
+  cin >> temp;
+  while (temp != '\n') {
+    ciphervec.push_back(temp);
+    cin >> temp;
+  }
+  // vector<double> decryptedvec;
+  vector<double> decryptedvec = decrypt(ciphervec);
 
-  string decryptedstr ;
-
+  // cout << "Decrypted text: " << decrypted_text << endl;
 }
