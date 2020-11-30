@@ -35,21 +35,13 @@ vector<double> decrypt(vector<int> cipher_vec) {
     cout << "The determinant value is : " << key_matrix.determinant() << endl;
   }
 
-  // TODO: Don't know how to get matrix's inverse
   MatrixXd invert_keymatrix(key_row, key_col);
   invert_keymatrix = key_matrix.inverse();
-  cout << invert_keymatrix << endl;
 
   // map cipher_vec chars to ints
   vector<int> vec;
-  // for (int i = 0; i < cipher_vec.size(); i++) {
-  //   vec.push_back((cipher_vec[i] - 'a'));
-  // }
 
   for (auto i : cipher_vec) vec.push_back(i);
-  // vec.push_back(67);
-  // vec.push_back(222);
-  // vec.push_back(319);
 
   int msg_row, msg_col;
   msg_row = cipher_vec.size(), msg_col = 1;
@@ -69,32 +61,12 @@ vector<double> decrypt(vector<int> cipher_vec) {
     decrypted_matrix = invert_keymatrix * msg_matrix;
   }
 
-  cout << "-------------" << endl;
-  cout << "msg:" << endl << msg_matrix << endl;
-  cout << "key:" << endl << key_matrix << endl;
-  cout << "inv:" << endl << invert_keymatrix << endl;
-
-  cout << "decy:" << endl << decrypted_matrix << endl;
-  cout << "-------------" << endl;
-
-  cout << "rows cols: " << decrypted_matrix.rows() << " "
-       << decrypted_matrix.cols() << endl;
-
   vector<double> double_vec;
 
   for (int i = 0; i < decrypted_matrix.rows(); i++)
     for (int j = 0; j < decrypted_matrix.cols(); j++) {
-      cout << "i, j" << i << " " << j << endl;
       double_vec.push_back(double(decrypted_matrix(i, j)));
     }
-
-  cout << "Decry: " << decrypted_matrix(0, 0) << decrypted_matrix(1, 0)
-       << decrypted_matrix(2, 0) << endl;
-
-  cout << "Vec: " << endl;
-  for (auto i : double_vec) {
-    cout << i << endl;
-  }
 
   return double_vec;
 }

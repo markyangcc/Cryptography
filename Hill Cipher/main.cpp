@@ -24,18 +24,27 @@ int main() {
   }
   cout << "Encrypted text: ";
   cout << encryptedstr << endl << endl;
-  cout << "--------------------------------------" << endl;
 
+  
+  cout << "--------------------------------------" << endl;
+  cout << "How many cipher numbers: ";
+  int num;
+  cin >> num;
   cout << "Enter the cipher numbers to be decrypted: ";
   vector<int> ciphervec;
-  int temp;
-  cin >> temp;
-  while (temp != '\n') {
-    ciphervec.push_back(temp);
-    cin >> temp;
+
+  for (int i = 0; i < num; i < ++i) {
+    int input;
+    cin >> input;
+    ciphervec.push_back(input);
   }
-  // vector<double> decryptedvec;
+
   vector<double> decryptedvec = decrypt(ciphervec);
 
-  // cout << "Decrypted text: " << decrypted_text << endl;
+  string encryptedstr;
+  for (auto i : decryptedvec) {
+    encryptedstr.push_back(char(i + 'a'));
+  }
+
+  cout << "Encrypted text: " << encryptedstr << endl << endl;
 }
