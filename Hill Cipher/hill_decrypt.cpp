@@ -8,12 +8,9 @@ using namespace Eigen;
 using namespace std;
 
 vector<double> decrypt(vector<int> cipher_vec) {
-  cout << "How many rows in the key matrix: ";
-  int size;
-  cin >> size;
-
-  int key_row = size;
-  int key_col = size;
+ 
+  int key_row = cipher_vec.size();
+  int key_col = cipher_vec.size();
 
   MatrixXd key_matrix(key_row, key_col);
 

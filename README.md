@@ -16,3 +16,9 @@ The officeal source code can be found on the offical website of LEW Compress.
 ## Playfair Encryption
 
 Cryptography algorithm——Playfair Encryption, implemented with C++ STL Library.
+
+## Hill Cipher
+
+Hill Cioher encrypt and decrypt with Eigen Library.
+### Demo
+![](https://gitee.com/gsyang/Image-Hosting/raw/master/img/hill-cipher-demo.png)

@@ -69,7 +69,6 @@ vector<int> encrypt(string str) {
 
   // cout << encrypted_matrix.rows() << " " << encrypted_matrix.cols() << endl;
 
-  cout << "Encr: " << endl << encrypted_matrix << endl;
   vector<int> int_vec;
 
   for (int i = 0; i < encrypted_matrix.rows(); i++)
