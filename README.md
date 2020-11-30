@@ -20,5 +20,10 @@ Cryptography algorithm——Playfair Encryption, implemented with C++ STL Librar
 ## Hill Cipher
 
 Hill Cioher encrypt and decrypt with Eigen Library.
+
+You can download the library from gitlab and follow the link——[Eigen 3.3.8.zip](https://gitlab.com/libeigen/eigen/-/archive/3.3.8/eigen-3.3.8.zip)
+
+After extrat the zip, just copy the Eigen folder in the eigen-3.3.8 folder into your project place to test the program.
+
 ### Demo
 ![](https://gitee.com/gsyang/Image-Hosting/raw/master/img/hill-cipher-demo.png)
