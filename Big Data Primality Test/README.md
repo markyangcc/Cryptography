@@ -30,7 +30,7 @@ bash linux64
 
 
 
-After compiled, copy the `miracl.h`, `mirdef.h`, `miracl.a` to the project root folder, beside the `main.c` file.
+After compiled, copy the `miracl.h`, `mirdef.h`, `miracl.a` to the project include folder, the folder created beside the `main.c` file.
 <br></br>
 ## Run program
 

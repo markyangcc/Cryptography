@@ -1,10 +1,8 @@
 # VSC Workspace configuration
 .vscode/
 
-# Miracl Library
-miracl.h
-mirdef.h
-miracl.a
+# Include files
+include/*
 
 # Executable files
 main
