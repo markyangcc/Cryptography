@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "miracl.h"
+#include "miracl/miracl.h"
 
 #define K 6  //安全系数
 

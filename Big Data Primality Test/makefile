@@ -3,7 +3,7 @@ CFLAGS = -Wall -g
 
 main: 	main.c
    		
-	$(CC) $(CFLAGS) main.c miracl.a -o main
+	$(CC) $(CFLAGS) main.c miracl/miracl.a -o main
 
 clean:
-	rm *.o main
+	rm main
