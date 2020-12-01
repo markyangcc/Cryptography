@@ -31,28 +31,34 @@ int main() {
     exit(EXIT_FAILURE);
   }
 
-  big p = mirvar(0);
+  big p = mirvar(0);  //初始化用来存储大数变量p
 
   while (!feof(fp)) {
     // int cinnum (flash x, FILE * filep)
     // x Big/flash number, filep File descriptor(stdin/opened file) docs:5
     cinnum(p, fp);  // converts *filep into big number x
+                    //将字符串转换成大数
+
+    fclose(fp);
 
     // int cotnum (flash x, FILE * filep)
     // Outputs a big/flash number to the screen or to a file, using as number
     // base the value currently assigned to docs:5
-    mip->IOBASE = 10;  //设置为10进制输出
-    cotnum(p, stdout);
+    mip->IOBASE = 10;   //设置为10进制输出
+    cotnum(p, stdout);  //输出读取的大数p，到stdout
 
     // Output
+    //
     if (fermat_primality_test(p) == true) {
       printf("\np有 %6.4lf%% 概率是素数\n", 100 * (1 - pow(0.5, K)));
+      // Fermat素性检测算法：
+      // 奇整数m，若任取一整数2<=a<=p-2，gcd（a，p）=1，使得a^(p-1)%p=1，则
+      // p至少有1/2的概率为素数
     }
     if (fermat_primality_test(p) == false) {
       printf("\np是合数\n");
     }
   }
-  fclose(fp);
 
   mirkill(p);
 
@@ -110,7 +116,7 @@ bool fermat_primality_test(big p) {
       // w = xy (mod n)
       powmod(a, pminus1, p, rval);  //如果rval=1，则p可能是素数
 
-      // j计数，有多少轮结果出来是素数
+      // j计数，看有多少轮结果出来是素数
       if (mr_compare(rval, constnum1) == 0) {
         j++;
       }
