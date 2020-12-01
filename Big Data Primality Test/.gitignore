@@ -1,8 +1,5 @@
 # VSC Workspace configuration
 .vscode/
 
-# Include files
-include/*
-
 # Executable files
 main

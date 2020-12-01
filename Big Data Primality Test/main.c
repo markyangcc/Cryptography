@@ -6,7 +6,7 @@
 
 #include "include/miracl.h"
 
-#define K 6  //安全系数
+#define K 6  //安全系数,计算的轮数
 
 bool fermat_primality_test(big p);
 
@@ -22,7 +22,7 @@ int main() {
   // size of big/flash numbers in 8-bit bytes
   // nb The number base docs:5
   miracl* mip = mirsys(500, 10);  // This initialises the MIRACL system to
-                                  // use 1500 decimal digits for each
+                                  // use 500 decimal digits for each
                                   // big or flash number
 
   if ((fp = fopen("data.txt", "r+")) == NULL) {
