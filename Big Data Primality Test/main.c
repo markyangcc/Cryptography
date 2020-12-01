@@ -21,11 +21,14 @@ int main() {
   // is taken as indicating the
   // size of big/flash numbers in 8-bit bytes
   // nb The number base docs:5
-  miracl* mip = mirsys(500, 10);  // This initialises the MIRACL system to
-                                  // use 500 decimal digits for each
-                                  // big or flash number
+  miracl* mip = mirsys(1500, 10);  // This initialises the MIRACL system to
+                                   // use 1500 decimal digits for each
+                                   // big or flash number
 
-  if ((fp = fopen("data.txt", "r+")) == NULL) {
+  set_io_buffer_size(20000);  // 设置buffer，防止缓冲区溢出(I/O buffer overflow)
+                              // 1 char = 8 Byte
+
+  if ((fp = fopen("data2.txt", "r+")) == NULL) {
     fprintf(stderr, "fopen() failed in file %s at line # %d", __FILE__,
             __LINE__);
     exit(EXIT_FAILURE);
