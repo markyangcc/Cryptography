@@ -1,0 +1,5 @@
+# VSC config folder
+.vscode/
+
+# Excutable file
+main
