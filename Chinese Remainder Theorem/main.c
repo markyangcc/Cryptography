@@ -10,13 +10,15 @@ int main() {
   //其中m=m1m2m……mk,Mj=m/mj,MjMj^-1≡1(mod mj),j=1,2,……k
   int i, j;  //设定循环变量
   FILE *fp;
-  int flag = 0;
+  int count = 0;
   big a[NUM], m[NUM], x[NUM], Mj[NUM],
       Mj1[NUM];  //设定大数数组，a存放同余号右边，m存放模值，x存放同余号左边，Mj与字面同义，Mj1存放Mj^-1
   big t0, t1, M, m1, X, y, W;
-  miracl *mip = mirsys(4000, 10);  //开辟空间
-  mip->IOBASE = 10;
-  for (i = 0; i < NUM; i++)  //初始化数组
+
+  miracl *mip = mirsys(1500, 10);  //初始化大数系统，1500个10进制数
+  mip->IOBASE = 10;                //指定进制为10进制
+  
+  for (i = 0; i < NUM; i++)        //初始化数组
   {
     a[i] = mirvar(0);
     m[i] = mirvar(0);
@@ -24,6 +26,7 @@ int main() {
     Mj[i] = mirvar(0);
     Mj1[i] = mirvar(0);
   }
+
   t0 = mirvar(0);  //初始化各变量
   t1 = mirvar(1);
   M = mirvar(1);
@@ -36,18 +39,18 @@ int main() {
   char tmp[4000];
   while (1) {
     fscanf(fp, "%s", tmp);
-    if (flag < NUM)  //从文件中读入a列并存入数组
+    if (count < NUM)  //从文件中读入a列并存入数组
     {
-      cinstr(a[flag], tmp);
-      cotnum(a[flag], stdout);
-      flag++;
+      cinstr(a[count], tmp);
+      cotnum(a[count], stdout);
+      count++;
     } else  //从文件中读入m列存入数组
     {
-      cinstr(m[flag - NUM], tmp);
-      cotnum(m[flag - NUM], stdout);
-      flag++;
+      cinstr(m[count - NUM], tmp);
+      cotnum(m[count - NUM], stdout);
+      count++;
     }
-    if (flag == 2 * NUM) break;
+    if (count == 2 * NUM) break;
   }
   printf("结果为：");
   fclose(fp);

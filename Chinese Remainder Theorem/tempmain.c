@@ -7,15 +7,15 @@
 
 FILE *fp;
 
-int flag = 0;
+int count = 0;
 
 int main() {
   int i, j;
 
-  big a[NUM], m[NUM], x[NUM], mj[NUM], mjr[NUM];
-  big t0, t1, M, m1, X, y, W;  //这里mj[] 为 Mj
-                               // mjr[] 为 M^-1 j
-                               // M 为 m[] 的连乘
+  big a[NUM], m[NUM], x[NUM], mj[NUM], mjr[NUM];  //这里mj[] 为 Mj
+                                                  // mjr[] 为 M^-1 j
+                                                  // M 为 m[] 的连乘
+  big t0, t1, M, m1, X, y, W;
 
   miracl *mip = mirsys(1500, 10);  //初始化大数系统，1500个10进制数
   mip->IOBASE = 10;                //指定进制为10进制
@@ -27,7 +27,7 @@ int main() {
     mj[i] = mirvar(0);
     mjr[i] = mirvar(0);
   }
-  
+
   t0 = mirvar(0);
   t1 = mirvar(1);
   M = mirvar(1);
@@ -37,21 +37,24 @@ int main() {
   W = mirvar(0);
 
   fp = fopen("data.txt", "r");
+
   char tmp[4000];
 
   while (1) {
-    fscanf(fp, "%s", tmp);
-    if (flag < NUM) {
-      cinstr(a[flag], tmp);
-      cotnum(a[flag], stdout);
-      flag++;
+    fscanf(fp, "%s\n", tmp);
+
+    if (count < NUM) {
+      cinstr(a[count], tmp);
+      cotnum(a[count], stdout);
+      count++;
     } else {
-      cinstr(m[flag - NUM], tmp);
-      cotnum(m[flag - NUM], stdout);
-      flag++;
+      cinstr(m[count - NUM], tmp);
+      cotnum(m[count - NUM], stdout);
+      count++;
     }
-    if (flag == 2 * NUM) break;
+    if (count == 2 * NUM) break;
   }
+
   printf("\n");
   fclose(fp);
 
