@@ -6,8 +6,8 @@
 #define NUM 3  //从文本读入方程组个数，数据以分行存储
 
 int main() {
-  //中国剩余定理：x≡M1M1^1a1+M2M2^-1a2+……+MkMk^-1ak(mod
-  //m)其中m=m1m2m……mk,Mj=m/mj,MjMj^-1≡1(mod mj),j=1,2,……k
+  //中国剩余定理：x≡M1M1^1a1+M2M2^-1a2+……+MkMk^-1ak(modm)
+  //其中m=m1m2m……mk,Mj=m/mj,MjMj^-1≡1(mod mj),j=1,2,……k
   int i, j;  //设定循环变量
   FILE *fp;
   int flag = 0;

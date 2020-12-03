@@ -1,5 +1,5 @@
 main: main.c
-	gcc main.c include/miracl.a -o main
+	gcc -Wall -g main.c include/miracl.a -o main
 
 clean: 
 	rm main
