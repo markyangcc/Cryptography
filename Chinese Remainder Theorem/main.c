@@ -13,12 +13,11 @@ int main() {
   int count = 0;
   big a[NUM], m[NUM], x[NUM], Mj[NUM],
       Mj1[NUM];  //设定大数数组，a存放同余号右边，m存放模值，x存放同余号左边，Mj与字面同义，Mj1存放Mj^-1
-  big t0, t1, M, m1, X, y, W;
 
   miracl *mip = mirsys(1500, 10);  //初始化大数系统，1500个10进制数
   mip->IOBASE = 10;                //指定进制为10进制
-  
-  for (i = 0; i < NUM; i++)        //初始化数组
+
+  for (i = 0; i < NUM; i++)  //初始化数组
   {
     a[i] = mirvar(0);
     m[i] = mirvar(0);
@@ -27,13 +26,13 @@ int main() {
     Mj1[i] = mirvar(0);
   }
 
-  t0 = mirvar(0);  //初始化各变量
-  t1 = mirvar(1);
-  M = mirvar(1);
-  m1 = mirvar(0);
-  X = mirvar(0);
-  y = mirvar(1);
-  W = mirvar(0);
+  big num_gcd = mirvar(0);  //初始化各变量
+  big constnum1 = mirvar(1);
+  big M = mirvar(1);
+  big m1 = mirvar(0);
+  big X = mirvar(0);
+  big y = mirvar(1);
+  big W = mirvar(0);
 
   fp = fopen("data.txt", "r");
   char tmp[4000];
@@ -58,9 +57,9 @@ int main() {
   for (i = 0; i < NUM; i++)  //判断m列是否两两互素
   {
     for (j = i + 1; j < NUM; j++) {
-      egcd(m[i], m[j], t0);  // t0=存放公约数，若gcd(m[i],
+      egcd(m[i], m[j], num_gcd);  // num_gcd=存放公约数，若gcd(m[i],
                              // m[j])=1即m两两互素进行下一次判断，否则跳出
-      if (mr_compare(t0, t1) == 0)
+      if (mr_compare(num_gcd, constnum1) == 0)
         continue;
       else {
         printf("不能直接应用中国剩余定理\n");
@@ -75,15 +74,15 @@ int main() {
 
   copy(M, W);  // W=M
   for (i = 0; i < 3; i++) {
-    divide(M, m[i], Mj[i]);             //计算Mj
-    xgcd(Mj[i], m[i], Mj1[i], m1, t1);  //计算Mj^1(mod mj)
-    copy(W, M);                         // M=W，数值还原
+    divide(M, m[i], Mj[i]);                    //计算Mj
+    xgcd(Mj[i], m[i], Mj1[i], m1, constnum1);  //计算Mj^1(mod mj)
+    copy(W, M);                                // M=W，数值还原
   }
 
   for (i = 0; i < NUM; i++)  //计算xj及其累加结果X
   {
-    multiply(Mj[i], Mj1[i], t0);
-    multiply(t0, a[i], x[i]);
+    multiply(Mj[i], Mj1[i], num_gcd);
+    multiply(num_gcd, a[i], x[i]);
     add(x[i], X, X);
   }
 
