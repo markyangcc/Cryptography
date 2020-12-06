@@ -17,7 +17,7 @@ int main() {
   miracl *mip = mirsys(1500, 10);  //初始化大数系统，1500个10进制数
   mip->IOBASE = 10;                //指定进制为10进制
 
-  for (i = 0; i < NUM; i++)  //初始化数组
+  for (i = 0; i < NUM; i++)  //初始化大数数组为零
   {
     a[i] = mirvar(0);
     m[i] = mirvar(0);
@@ -26,8 +26,8 @@ int main() {
     Mj1[i] = mirvar(0);
   }
 
-  big num_gcd = mirvar(0);  //初始化各变量
-  big constnum1 = mirvar(1);
+  big num_gcd = mirvar(0);    //初始化用到的 big变量
+  big constnum1 = mirvar(1);  //常量大数1
   big M = mirvar(1);
   big m1 = mirvar(0);
   big X = mirvar(0);
@@ -38,7 +38,7 @@ int main() {
   char tmp[4000];
   while (1) {
     fscanf(fp, "%s", tmp);
-    if (count < NUM)  //从文件中读入a列并存入数组
+    if (count < NUM)  //从文本文件中读取 NUM 行
     {
       cinstr(a[count], tmp);
       cotnum(a[count], stdout);
@@ -58,7 +58,7 @@ int main() {
   {
     for (j = i + 1; j < NUM; j++) {
       egcd(m[i], m[j], num_gcd);  // num_gcd=存放公约数，若gcd(m[i],
-                             // m[j])=1即m两两互素进行下一次判断，否则跳出
+                                  // m[j])=1即m两两互素进行下一次判断，否则跳出
       if (mr_compare(num_gcd, constnum1) == 0)
         continue;
       else {
