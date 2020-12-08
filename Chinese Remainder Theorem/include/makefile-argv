@@ -1,0 +1,5 @@
+main_argv: main_argv.c
+	gcc -Wall -g main_argv.c include/miracl.a -o main_argv.c
+
+clean: 
+	rm main_argv

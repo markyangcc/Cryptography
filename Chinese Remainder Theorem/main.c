@@ -3,95 +3,137 @@
 
 #include "include/miracl.h"
 
-#define NUM 3  //从文本读入方程组个数，数据以分行存储
-
 int main() {
-  //中国剩余定理：x≡M1M1^1a1+M2M2^-1a2+……+MkMk^-1ak(modm)
-  //其中m=m1m2m……mk,Mj=m/mj,MjMj^-1≡1(mod mj),j=1,2,……k
-  int i, j;  //设定循环变量
+  //中国剩余定理：x ≡ m1*m1^-1*a1 + m2*m2^-1*a2 + …… + mk*mk^-1*ak (modm)
+  //其中 M = m1m2m3……mk,Mi=M/mi,Mi*Mi^-1 ≡ 1(mod mi),i=1,2,……k
+  // int i, j;  //设定循环变量e
+
+  //---------------------------------------------------------------------------
+  //从文本读入方程组个数，数据存储格式为分行存储
+  int temp_num = 0;
+  printf("输入方程组的个数：\n");
+  scanf("%d", &temp_num);
+  const int NUM = temp_num;
+
   FILE *fp;
-  int count = 0;
-  big a[NUM], m[NUM], x[NUM], Mj[NUM],
-      Mj1[NUM];  //设定大数数组，a存放同余号右边，m存放模值，x存放同余号左边，Mj与字面同义，Mj1存放Mj^-1
+  big a[NUM], m[NUM], x[NUM], Mi[NUM],
+      Mi1[NUM];  //设定大数数组，a存放同余号右边，m存放模值，x存放同余号左边，Mi与字面同义，Mi1存放Mi^-1
 
   miracl *mip = mirsys(1500, 10);  //初始化大数系统，1500个10进制数
   mip->IOBASE = 10;                //指定进制为10进制
 
-  for (i = 0; i < NUM; i++)  //初始化大数数组为零
+  for (int i = 0; i < NUM; i++)  //初始化大数数组为零
   {
     a[i] = mirvar(0);
     m[i] = mirvar(0);
     x[i] = mirvar(0);
-    Mj[i] = mirvar(0);
-    Mj1[i] = mirvar(0);
+    Mi[i] = mirvar(0);
+    Mi1[i] = mirvar(0);
   }
 
-  //初始化用到的 big变量
-  big gcd_num = mirvar(0);
+  //初始化或声明用到的 big变量
   big constnum1 = mirvar(1);  //常量大数1
-  big M = mirvar(1);
-  big m1 = mirvar(0);
-  big X = mirvar(0);
-  big y = mirvar(1);
-  big W = mirvar(0);
+  big constnum0 = mirvar(0);  //常量大数0
+  big M = mirvar(1);          //初始化mi的连乘变量M为1
+  big X = mirvar(0);          //初始化方程组的解变量X为0
+  big M_bak = mirvar(0);      //备份 连乘M 的值
 
   fp = fopen("data.txt", "r");
   char tmp[4000];
+  int count = 0;
   while (1) {
     fscanf(fp, "%s", tmp);
     if (count < NUM)  //从文本文件中读取 NUM 行
     {
       cinstr(a[count], tmp);
+      printf("\n成功读取大数并赋值给a[%d]:\n", count);
       cotnum(a[count], stdout);
       count++;
     } else  //从文件中读入m列存入数组
     {
       cinstr(m[count - NUM], tmp);
+      printf("\n成功读取大数并赋值给m[%d]:\n", count - NUM);
+
       cotnum(m[count - NUM], stdout);
       count++;
     }
     if (count == 2 * NUM) break;
   }
 
-  printf("结果为：\n");
+  printf("\n方程组的解x为：\n");
   fclose(fp);
 
-  for (i = 0; i < NUM; i++)  //判断 mi 是否两两互素
-  {
-    for (j = i + 1; j < NUM; j++) {
+  //---------------------------------------------------------------------------
+  //判断 mi 之间是否两两互素
+  big gcd_num = mirvar(0);
+
+  //结束条件的判断用到了同余定理的传递性：若a≡b(mod m)，b≡c(mod m)，则a≡c(mod m)
+  for (int i = 0; i < NUM; i++) {
+    for (int j = i + 1; j < NUM; j++) {
       // int egcd (big x, big y, big z)
-      // Calculates the Greatest Common Divisor of two big numbers.
-      // Returns:GCD as integer, if possible, otherwise MR_TOOBIG.
-      egcd(m[i], m[j], gcd_num);  // gcd_num用来存放公约数，若gcd(m[i], m[j])=1
-                                  // 即m两两互素进行下一次判断，否则跳出
+      // z = gcd(x,y)
+      // 计算两个大数的最大公约数，并讲结果赋值给 z
+      egcd(m[i], m[j],
+           gcd_num);  // gcd_num为最大公约数，若gcd(m[i], m[j])=1
+                      // 说明二者互素，继续进行下一次判断，否则exit()
       if (mr_compare(gcd_num, constnum1) == 0)
         continue;
       else {
         printf("不能直接应用中国剩余定理\n");
-        exit(0);
+        exit(EXIT_SUCCESS);
       }
     }
   }
 
-  for (i = 0; i < NUM; i++) {
-    multiply(m[i], M, M);  //计算 M=m1m2……mk
+  //---------------------------------------------------------------------------
+  // 计算 mi 的乘积 M
+  // void multiply (big x, big y, big z)
+  // z = xy
+  // 计算两个大数的乘积，赋值给 z
+  for (int i = 0; i < NUM; i++) {
+    multiply(m[i], M, M);  //计算 M = m1 * m2 * m3 *……* mk
   }
 
-  copy(M, W);  // W = M
-  for (i = 0; i < 3; i++) {
-    divide(M, m[i], Mj[i]);                    //计算Mj
-    xgcd(Mj[i], m[i], Mj1[i], m1, constnum1);  //计算Mj^1(mod mj)
-    copy(W, M);                                // M=W，数值还原
+  //---------------------------------------------------------------------------
+  //计算 M[i] 的模反,然后将模反结果存储到 Mi1[i]
+
+  // void copy* (flash x, flash y)
+  // 复制， y= x
+  copy(M, M_bak);  // 备份 M 的值，M_bak = M
+  for (int i = 0; i < NUM; i++) {
+    // void divide (big x, big y, big z)
+    // Divides one big number by another: z = x/y, x = x (mod y). The
+    // quotient(商) only is returned if x and z are the same, the remainder(余)
+    // only if y and z are the same.
+    divide(M, m[i], Mi[i]);  //计算 Mi
+
+    // int xgcd (big x, big y, big xd, big yd, big z)
+    //计算两个大数的扩展最大公因数。 也可用于计算模反
+    // z = gcd(x, y) = (x * xd) + (y * yd)
+    //由裴蜀定理给出：给定二个整数a、b，必存在整数x、y使得ax + by = gcd(a,b)
+    xgcd(Mi[i], m[i], Mi1[i], constnum0,
+         constnum1);  //计算模反,Mi1[i] = Mi[i]^-1
+    copy(M_bak, M);   // M = M_bak，每次循环前还原数据 M
   }
 
-  for (i = 0; i < NUM; i++)  //计算xj及其累加结果X
+  //---------------------------------------------------------------------------
+  //计算方程的通解形式 X
+  // xi = Mi * Mi^-1 * ai
+  // 解X = x1 + x2 + x3 + ... + xi
+  for (int i = 0; i < NUM; i++)  //计算xj及其累加结果X
   {
-    multiply(Mj[i], Mj1[i], gcd_num);
+    // void multiply (big x, big y, big z)
+    // z = xy
+    multiply(Mi[i], Mi1[i], gcd_num);
     multiply(gcd_num, a[i], x[i]);
+    // void add (big x, big y, big z)
+    // z = x + y
     add(x[i], X, X);
   }
-
-  powmod(X, y, M, X);  // X mod M
+  // void powmod (big x, big y, big n, big w)
+  // w = xy (mod n)
+  powmod(X, constnum1, M, X);  // X  = X *1 (mod M),即 X = X % M，计算 X % M
+                               // 后赋值给 X y = 1
 
   cotnum(X, stdout);
   mirexit();
