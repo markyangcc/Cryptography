@@ -26,7 +26,8 @@ int main() {
     Mj1[i] = mirvar(0);
   }
 
-  big num_gcd = mirvar(0);    //初始化用到的 big变量
+  //初始化用到的 big变量
+  big gcd_num = mirvar(0);
   big constnum1 = mirvar(1);  //常量大数1
   big M = mirvar(1);
   big m1 = mirvar(0);
@@ -51,15 +52,19 @@ int main() {
     }
     if (count == 2 * NUM) break;
   }
-  printf("结果为：");
+
+  printf("结果为：\n");
   fclose(fp);
 
-  for (i = 0; i < NUM; i++)  //判断m列是否两两互素
+  for (i = 0; i < NUM; i++)  //判断 mi 是否两两互素
   {
     for (j = i + 1; j < NUM; j++) {
-      egcd(m[i], m[j], num_gcd);  // num_gcd=存放公约数，若gcd(m[i],
-                                  // m[j])=1即m两两互素进行下一次判断，否则跳出
-      if (mr_compare(num_gcd, constnum1) == 0)
+      // int egcd (big x, big y, big z)
+      // Calculates the Greatest Common Divisor of two big numbers.
+      // Returns:GCD as integer, if possible, otherwise MR_TOOBIG.
+      egcd(m[i], m[j], gcd_num);  // gcd_num用来存放公约数，若gcd(m[i], m[j])=1
+                                  // 即m两两互素进行下一次判断，否则跳出
+      if (mr_compare(gcd_num, constnum1) == 0)
         continue;
       else {
         printf("不能直接应用中国剩余定理\n");
@@ -69,10 +74,10 @@ int main() {
   }
 
   for (i = 0; i < NUM; i++) {
-    multiply(m[i], M, M);  //计算M=m1m2……mk
+    multiply(m[i], M, M);  //计算 M=m1m2……mk
   }
 
-  copy(M, W);  // W=M
+  copy(M, W);  // W = M
   for (i = 0; i < 3; i++) {
     divide(M, m[i], Mj[i]);                    //计算Mj
     xgcd(Mj[i], m[i], Mj1[i], m1, constnum1);  //计算Mj^1(mod mj)
@@ -81,8 +86,8 @@ int main() {
 
   for (i = 0; i < NUM; i++)  //计算xj及其累加结果X
   {
-    multiply(Mj[i], Mj1[i], num_gcd);
-    multiply(num_gcd, a[i], x[i]);
+    multiply(Mj[i], Mj1[i], gcd_num);
+    multiply(gcd_num, a[i], x[i]);
     add(x[i], X, X);
   }
 
