@@ -6,7 +6,6 @@
 int main() {
   //中国剩余定理：x ≡ m1*m1^-1*a1 + m2*m2^-1*a2 + …… + mk*mk^-1*ak (modm)
   //其中 M = m1m2m3……mk,Mi=M/mi,Mi*Mi^-1 ≡ 1(mod mi),i=1,2,……k
-  // int i, j;  //设定循环变量e
 
   //---------------------------------------------------------------------------
   //从文本读入方程组个数，数据存储格式为分行存储
@@ -132,11 +131,12 @@ int main() {
   }
   // void powmod (big x, big y, big n, big w)
   // w = xy (mod n)
-  powmod(X, constnum1, M, X);  // X  = X *1 (mod M),即 X = X % M，计算 X % M
+  powmod(X, constnum1, M, X);  //算出方程组的解后再对结果求模 X  = X *1 (mod
+                               // M),即 X = X % M，计算 X % M
                                // 后赋值给 X y = 1
 
   cotnum(X, stdout);
-  mirexit();
+  mirexit();  //退出系统
 
   return 0;
 }

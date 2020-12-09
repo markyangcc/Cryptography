@@ -1,5 +1,8 @@
+CC= gcc
+CFLAGS = -Wall -g -std=c99
+
 main: main.c
-	gcc -Wall -g main.c include/miracl.a -o main
+	$(CC) $(CFLAGS) main.c lib/miracl.a -o main
 
 clean: 
 	rm main
