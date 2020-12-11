@@ -18,7 +18,7 @@ int main() {
   big a[NUM], m[NUM], x[NUM], Mi[NUM],
       Mi1[NUM];  //设定大数数组，a存放同余号右边，m存放模值，x存放同余号左边，Mi与字面同义，Mi1存放Mi^-1
 
-  miracl *mip = mirsys(1500, 10);  //初始化大数系统，1500个10进制数
+  miracl *mip = mirsys(500, 10);  //初始化大数系统，1500个10进制数
   mip->IOBASE = 10;                //指定进制为10进制
 
   for (int i = 0; i < NUM; i++)  //初始化大数数组为零
