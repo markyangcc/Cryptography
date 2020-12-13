@@ -26,7 +26,7 @@ array<array<char, 5>, 5> build_table(const string& key = "ballon") {
   set<char> alpha(begin(alphastr), end(alphastr));
   set<char> settarstr(begin(tarstr), end(tarstr));
 
-  // find out symDifference set
+  // find out symDifference setz
   std::vector<char> symDifference;
   std::set_symmetric_difference(alpha.begin(), alpha.end(), settarstr.begin(),
                                 settarstr.end(),
