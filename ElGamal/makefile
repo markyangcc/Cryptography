@@ -1,5 +1,5 @@
-main:main.c
-	gcc -Wall -g -std=c99 main.c lib/miracl.a -o main
+temp:temp.c
+	gcc temp.c lib/miracl.a -o temp -Wall -g -std=c11
 
 clean:
-	rm main
+	rm temp

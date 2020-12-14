@@ -5,31 +5,36 @@
 
 #include "include/miracl.h"
 
-void enc(big m, big p, big g, big y, big cs[2]);
-big dec(big cs[2], big p, big x);
+void encrypt(big m, big p, big g, big y, big cs[2]);
+big decrypt(big cs[2], big p, big x);
 
 int main(int argc, char* argv[]) {
-  miracl* mip = mirsys(1000, 10);
-  char buf[1001] = {0};
-  char msg[151] = {0};
+  miracl* mip = mirsys(1000, 10);  //初始化大数系统为1000位的十进制数
+  mip->IOBASE = 10;                //指定10进制
+
+  char buf[1000] = {0};
+  char msg[150] = {0};
+
   FILE* fp = NULL;
   big two, one, p, q, g, x, y, m, c, tmp, psubtwo;
   big cs[2], ret;
 
-  mip->IOBASE = 10;
   //读取文件数据
   if (argc != 2) {
     fprintf(stderr, "usage: %s <message-file-path>\n", argv[0]);
-    goto exit;
+    mirexit();
+    exit(EXIT_FAILURE);
   }
   if ((fp = fopen(argv[1], "r")) == NULL) {
     fprintf(stderr, "file open err: can't open file %s !\n", argv[1]);
-    goto exit;
+    mirexit();
+    exit(EXIT_FAILURE);
   }
   if (fread(msg, sizeof(char), 150, fp) <= 0) {
     fprintf(stderr, "file read err: can't read file %s !\n", argv[1]);
     fclose(fp);
-    goto exit;
+    mirexit();
+    exit(EXIT_FAILURE);
   }
   fclose(fp);
 
@@ -117,7 +122,7 @@ int main(int argc, char* argv[]) {
   printf("\n");
 
   //加密
-  enc(m, p, g, y, cs);
+  encrypt(m, p, g, y, cs);
 
   //输出y1和y2
   printf("密文：\n");
@@ -130,7 +135,7 @@ int main(int argc, char* argv[]) {
   printf("\n");
 
   //解密
-  ret = dec(cs, p, x);
+  ret = decrypt(cs, p, x);
 
   //输出还原的消息
   printf("明文：\n");
@@ -139,12 +144,11 @@ int main(int argc, char* argv[]) {
   printf("message = %s\n", buf);
   printf("\n");
 
-exit:
   mirexit();
   return 0;
 }
 
-void enc(big m, big p, big g, big y, big cs[2]) {
+void encrypt(big m, big p, big g, big y, big cs[2]) {
   big one, psubone, k, tmp;
   one = mirvar(1);
   psubone = mirvar(0);
@@ -172,7 +176,7 @@ void enc(big m, big p, big g, big y, big cs[2]) {
   return;
 }
 
-big dec(big cs[2], big p, big x) {
+big decrypt(big cs[2], big p, big x) {
   big tmp, one, ret;
 
   tmp = mirvar(0);
