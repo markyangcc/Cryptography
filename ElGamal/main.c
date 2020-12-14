@@ -4,7 +4,7 @@
 #include <time.h>
 
 #include "include/miracl.h"
-#define MAX_D 150  //安全素数 p 的位数
+#define LENGTH 150  //安全素数 p 的位数
 
 int main() {
   //-------------------------------------------------------------
@@ -24,11 +24,11 @@ int main() {
   mip->IOBASE = 10;                //指定IO使用的是10进制
 
   big p = mirvar(0);
-  big p_1 = mirvar(0);  // p-1
-  big p_2 = mirvar(0);  // p-2
-  big q = mirvar(0);
   big g = mirvar(0);
-  big x = mirvar(0);
+  big pminus1 = mirvar(0);  // p-1
+  big pminus2 = mirvar(0);  // p-2
+  big q = mirvar(0);
+  big a = mirvar(0);  //密钥
   big y = mirvar(0);
   big y1 = mirvar(0), y2 = mirvar(0);
   big m = mirvar(0);   //明文
@@ -39,40 +39,77 @@ int main() {
 
   irand((unsigned)time(NULL));  // 使用当前时间作为随机数种子
                                 //随机生成一个安全素数p
-  bigdig(MAX_D, 10, q);         //生成一个150位的随机数
-  nxsafeprime(0, 0, q, p);      //生成一个比q大的安全素数p
-  copy(p, q);
-  decr(q, 1, q);
-  subdiv(q, 2, q);  //生成q=(p-1)/2
-  decr(p, 1, p_1);  //生成p_1=p-1
-  decr(p, 2, p_2);  //生成p_2=p-2
-  //寻找一个本原根
-  // irand((unsigned)time(NULL)); // 使用当前时间作为随机数种子
+
+  // void bigdig (int n, int b, big x)
+  // 生成一个给定长度的 b进制的大数并赋值给 x
+  bigdig(LENGTH, 10, q);  //生成一个150位的10进制的随机数q
+
+  // BOOL nxsafeprime (int type, int subset, big w, big p)
+  // type: 素数的类型 q = (p − 1)/2 (type=0) or q = (p + 1)/2 (type=1)
+  nxsafeprime(0, 0, q, p);  //生成下一个比q大的安全素数p
+
+  // void copy* (flash x, flash y)
+  // y = x
+  copy(p, q);  // q = p, p为刚刚生成的随机安全素数
+
+  // void decr (big x, int n, big z)
+  // z = x − n
+  decr(q, 1, q);  // q = q-1, 将q减一
+
+  // int subdiv (big x, int n, big z)
+  // z = x/n
+  subdiv(q, 2, q);  //大数除法，q = (p-1)/2
+
+  decr(p, 1, pminus1);  //大数减法，生成pminus1 = p-1
+  decr(p, 2, pminus2);  //大数减法，生成pminus2 = p-2
+
+  //==================================================================
+  //查找一个原根
+  //若g满足 g^2 mod p !=1 且 g^q mod p !=1，则说明g是一个原根
   while (1) {
-    bigrand(p_1, g);                    // g小于p-1
-    if (mr_compare(g, constnum1) <= 0)  //保证g大于1
-      continue;
-    powmod(g, mirvar(2), p, flag);
+    // void bigrand (big w, big x)
+    //随机生成一个介于[0,w)之间的随机大数
+    // 0 <= x < w
+    bigrand(pminus1, g);  //随机生成一个特定范围的原根, g小于p-1
+
+    // int compare* (big x, big y)
+    // +1 if x > y; 0 if x = y; -1 if x < y
+    if (mr_compare(g, constnum1) <= 0)  //保证生成的原根g是大于1的
+      continue;  //如果生成的g等于或者小于1都继续循环生成
+
+    // void powmod (big x, big y, big n, big w)
+    // w = x^y (mod n)
+    powmod(g, mirvar(2), p, flag);  // 构造flag = g^2 (mod p)
+    //如果flag不等于1，即g与2同余
     if (mr_compare(flag, constnum1) != 0) {
-      powmod(g, q, p, flag);
+      powmod(g, q, p, flag);  // 构造flag = g^q (mod p)
+      //如果flag不等于1,即 g与2同余且与q同余，此时说明g是原根
       if (mr_compare(flag, constnum1) != 0) {
-        multiply(q, mirvar(2), flag);
-        powmod(g, flag, p, flag);
+        // void multiply (big x, big y, big z)
+        // z = xy
+        multiply(q, mirvar(2), flag);  // flag = q*2
+        powmod(g, flag, p, flag);      // flag = g^flag (mod p)，
+
+        //如果flag =1 退出循环，即 g^2q (mod p) = 1 时退出循环
         if (mr_compare(flag, constnum1) == 0) break;
       }
     }
-  }  // end
+  }
 
-  //随机选择私钥x，1<x<p-2
-  irand((unsigned)time(NULL));  // 使用当前时间作为随机数种子
+  //==================================================================
+  //随机选择私钥 a
+  // 1 < a < p-2
+  irand((unsigned)time(NULL));  // 随机数播种
   while (1) {
-    bigrand(p_2, x);                   // x <p-2
-    if (mr_compare(x, constnum1) > 0)  //保证x>1
+    bigrand(pminus2, a);               // a < p-2
+    if (mr_compare(a, constnum1) > 0)  //保证 a > 1
       break;
-  }  // end
-  //计算y
-  powmod(g, x, p, y);
-  // end
+  }
+
+  //==================================================================
+  //计算 g^a (mod p)
+  powmod(g, a, p, y);  // y =g^a (mod p)
+
   printf("\n-------公布公钥（p，g，y）--------\n");
   printf("p = \n");
   cotnum(p, stdout);
@@ -81,7 +118,7 @@ int main() {
   printf("y = \n");
   cotnum(y, stdout);
   printf("\n--------私钥----------------------\n");
-  cotnum(x, stdout);
+  cotnum(a, stdout);
 
   //-------------------------------------------------------------
   //加密算法
@@ -89,10 +126,10 @@ int main() {
   //随机生成k，使得1<=k<=p-2,(k,p-1)=1
   irand((unsigned)time(NULL));  // 随机数种子
   while (1) {
-    bigrand(p_1, k);                   // k小于p-1
+    bigrand(pminus1, k);               // k小于p-1
     if (mr_compare(k, constnum1) < 0)  //保证k>=1
       continue;
-    egcd(k, p_1, flag);
+    egcd(k, pminus1, flag);
     if (mr_compare(flag, constnum1) == 0) break;
   }  // end
   //计算y1=g^k mod p
@@ -113,7 +150,7 @@ int main() {
   //计算m1
   copy(y1, flag);
   xgcd(flag, p, flag, flag, flag);  //求y1的逆放到flag里面
-  powmod(flag, x, p, y1);           //求(y1的逆)的x次方  mod p
+  powmod(flag, a, p, y1);           //求(y1的逆)的x次方  mod p
   powmod(y2, constnum1, p, y2);     // y2 mod p
   powmod2(y1, constnum1, y2, constnum1, p, m1);
   printf("\n------------解密明文-----------------\n");
