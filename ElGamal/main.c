@@ -1,178 +1,191 @@
-#include <ctype.h>
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
-int e1, e2;
-int p, d;
-int C1, C2;
-FILE *out1, *out2;
+#include "include/miracl.h"
 
-int gcd(int a, int b) {
-  int q, r1, r2, r;
+void enc(big m, big p, big g, big y, big cs[2]);
+big dec(big cs[2], big p, big x);
 
-  if (a > b) {
-    r1 = a;
-    r2 = b;
-  } else {
-    r1 = b;
-    r2 = a;
+int main(int argc, char* argv[]) {
+  miracl* mip = mirsys(1000, 10);
+  char buf[1001] = {0};
+  char msg[151] = {0};
+  FILE* fp = NULL;
+  big two, one, p, q, g, x, y, m, c, tmp, psubtwo;
+  big cs[2], ret;
+
+  mip->IOBASE = 10;
+  //读取文件数据
+  if (argc != 2) {
+    fprintf(stderr, "usage: %s <message-file-path>\n", argv[0]);
+    goto exit;
+  }
+  if ((fp = fopen(argv[1], "r")) == NULL) {
+    fprintf(stderr, "file open err: can't open file %s !\n", argv[1]);
+    goto exit;
+  }
+  if (fread(msg, sizeof(char), 150, fp) <= 0) {
+    fprintf(stderr, "file read err: can't read file %s !\n", argv[1]);
+    fclose(fp);
+    goto exit;
+  }
+  fclose(fp);
+
+  //初始化大数
+  one = mirvar(1);
+  two = mirvar(2);
+  p = mirvar(0);
+  q = mirvar(0);
+  g = mirvar(2);
+  x = mirvar(0);
+  y = mirvar(0);
+  m = mirvar(0);
+  c = mirvar(0);
+  tmp = mirvar(0);
+  psubtwo = mirvar(0);
+  irand(time(NULL));
+
+  //
+  cinstr(m, msg);
+
+  //选取随机素数q和p
+  while (1) {
+    bigbits(499, q);
+    if (isprime(q)) break;
   }
 
-  while (r2 > 0) {
-    q = r1 / r2;
-    r = r1 - q * r2;
-    r1 = r2;
-    r2 = r;
-  }
-
-  return r1;
-}
-
-int FastExponention(int bit, int n, int* y, int* a) {
-  if (bit == 1) *y = (*y * (*a)) % n;
-
-  *a = (*a) * (*a) % n;
-}
-
-int FindT(int a, int m, int n) {
-  int r;
-  int y = 1;
-
-  while (m > 0) {
-    r = m % 2;
-    FastExponention(r, n, &y, &a);
-    m = m / 2;
-  }
-
-  return y;
-}
-
-int PrimarityTest(int a, int i) {
-  int n = i - 1;
-  int k = 0;
-  int m, T;
-
-  while (n % 2 == 0) {
-    k++;
-    n = n / 2;
-  }
-
-  m = n;
-  T = FindT(a, m, i);
-  if (T == 1 || T == i - 1) return 1;
-
-  for (int j = 0; j < k; j++) {
-    T = FindT(T, 2, i);
-    if (T == 1) return 0;
-    if (T == i - 1) return 1;
-  }
-
-  return 0;
-}
-
-int PrimitiveRoot(int p) {
-  int flag;
-  for (int a = 2; a < p; a++) {
-    flag = 1;
-    for (int i = 1; i < p; i++) {
-      if (FindT(a, i, p) == 1 && i < p - 1) {
-        flag = 0;
-      } else if (flag && FindT(a, i, p) == 1 && i == p - 1) {
-        return a;
-      }
+  while (1) {
+    add(q, two, q);
+    if (!isprime(q)) {
+      continue;
+    }
+    add(q, q, p);
+    add(p, one, p);
+    if (isprime(p)) {
+      break;
     }
   }
-}
 
-int KeyGeneration() {
+  /*do {
+          bigbits(500, tmp);
+  } while (!nxsafeprime(0, 0, tmp, p));
+  decr(p, 1, q);
+  sftbit(q, 1, q);*/
+
+  //获取生成元g
   do {
-    do
-      p = rand() + 256;
-    while (p % 2 == 0);
+    powmod(g, two, p, tmp);
+    if (mr_compare(tmp, one) > 0) {
+      powmod(g, q, p, tmp);
+      if (mr_compare(tmp, one) > 0) {
+        break;
+      }
+    }
+    add(g, one, g);
 
-  } while (!PrimarityTest(2, p));
-  p = 107;
+  } while (mr_compare(g, p) < 0);
 
-  e1 = 2;
+  //随机取x
+  decr(p, 2, psubtwo);
   do {
-    d = rand() % (p - 2) + 1;  // 1 <= d <= p-2
-  } while (gcd(d, p) != 1);
+    bigrand(psubtwo, x);
+  } while (mr_compare(x, one) <= 0);
 
-  d = 67;
-  e2 = FindT(e1, d, p);
-}
+  //计算y
+  powmod(g, x, p, y);
 
-int Encryption(int Plaintext) {
-  out1 = fopen("cipher1.txt", "a+");
-  out2 = fopen("cipher2.txt", "a+");
+  //输出公钥
+  printf("公钥：\n");
+  memset(buf, 0, 501);
+  cotstr(p, buf);
+  printf("p = %s\n", buf);
+  memset(buf, 0, 501);
+  cotstr(g, buf);
+  printf("g = %s\n", buf);
+  memset(buf, 0, 501);
+  cotstr(y, buf);
+  printf("y = %s\n", buf);
+  printf("\n");
 
-  int r;
-  do {
-    r = rand() % (p - 1) + 1;  // 1 < r < p
-  } while (gcd(r, p) != 1);
+  //输出私钥
+  printf("私钥：\n");
+  memset(buf, 0, 501);
+  cotstr(x, buf);
+  printf("x = %s\n", buf);
+  printf("\n");
 
-  C1 = FindT(e1, r, p);
-  C2 = FindT(e2, r, p) * Plaintext % p;
+  //加密
+  enc(m, p, g, y, cs);
 
-  fprintf(out1, "%d ", C1);
-  fprintf(out2, "%d ", C2);
+  //输出y1和y2
+  printf("密文：\n");
+  memset(buf, 0, 501);
+  cotstr(cs[0], buf);
+  printf("y1 = %s\n", buf);
+  memset(buf, 0, 501);
+  cotstr(cs[1], buf);
+  printf("y2 = %s\n", buf);
+  printf("\n");
 
-  fclose(out1);
-  fclose(out2);
-}
+  //解密
+  ret = dec(cs, p, x);
 
-int Decryption(int C1, int C2) {
-  FILE* out = fopen("result.txt", "a+");
-  int decipher = C2 * FindT(C1, p - 1 - d, p) % p;
-  fprintf(out, "%c", decipher);
-  fclose(out);
-}
+  //输出还原的消息
+  printf("明文：\n");
+  memset(buf, 0, 501);
+  cotstr(ret, buf);
+  printf("message = %s\n", buf);
+  printf("\n");
 
-int main() {
-  FILE *out, *inp;
-
-  // destroy contents of these files (from previous runs, if any)
-  out = fopen("result.txt", "w+");
-  fclose(out);
-
-  out = fopen("cipher1.txt", "w+");
-  fclose(out);
-  out = fopen("cipher2.txt", "w+");
-  fclose(out);
-
-  KeyGeneration();
-
-  inp = fopen("plain.txt", "r+");
-  if (inp == NULL) {
-    printf("Error opening Source File.\n");
-    exit(1);
-  }
-
-  while (1) {
-    char ch = getc(inp);
-    if (ch == EOF) break;  // M < p
-
-    Encryption(toascii(ch));
-  }
-
-  fclose(inp);
-
-  FILE *inp1, *inp2;
-  inp1 = fopen("cipher1.txt", "r");
-  inp2 = fopen("cipher2.txt", "r");
-
-  int C1, C2;
-  while (1) {
-    int ret = fscanf(inp1, "%d", &C1);
-    fscanf(inp2, "%d", &C2);
-    if (ret == -1) break;
-
-    Decryption(C1, C2);
-  }
-
-  fclose(inp1);
-  fclose(inp2);
-
+exit:
+  mirexit();
   return 0;
+}
+
+void enc(big m, big p, big g, big y, big cs[2]) {
+  big one, psubone, k, tmp;
+  one = mirvar(1);
+  psubone = mirvar(0);
+  k = mirvar(0);
+  tmp = mirvar(0);
+  cs[0] = mirvar(0);
+  cs[1] = mirvar(0);
+
+  decr(p, 1, psubone);
+  while (1) {
+    bigrand(psubone, k);
+    if (mr_compare(k, one) >= 0) {
+      egcd(k, y, tmp);
+      if (mr_compare(tmp, one) == 0) break;
+    }
+  }
+  powmod(g, k, p, cs[0]);
+  powmod(y, k, p, cs[1]);
+  multiply(cs[1], m, cs[1]);
+  powmod(cs[1], one, p, cs[1]);
+
+  mirkill(one);
+  mirkill(psubone);
+  mirkill(k);
+  return;
+}
+
+big dec(big cs[2], big p, big x) {
+  big tmp, one, ret;
+
+  tmp = mirvar(0);
+  ret = mirvar(0);
+  one = mirvar(1);
+
+  powmod(cs[0], x, p, tmp);
+  xgcd(tmp, p, tmp, tmp, tmp);
+  fft_mult(cs[1], tmp, tmp);
+  powmod(tmp, one, p, ret);
+
+  mirkill(tmp);
+  mirkill(one);
+
+  return ret;
 }
