@@ -130,7 +130,7 @@ int main() {
     add(x[i], X, X);
   }
   // void powmod (big x, big y, big n, big w)
-  // w = xy (mod n)
+  // w = x^y (mod n)
   powmod(X, constnum1, M, X);  //算出方程组的解后再对结果求模 X  = X *1 (mod
                                // M),即 X = X % M，计算 X % M
                                // 后赋值给 X y = 1
