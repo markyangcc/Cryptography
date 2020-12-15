@@ -157,9 +157,9 @@ int main() {
   cotnum(m1, stdout);
   if (mr_compare(m, m1) == 0) {
     printf("\n");
-    printf("成功\n");
+    printf("解密成功\n");
   } else
-    printf("false\n");
+    printf("解密失败\n");
 
   mirexit();
 
