@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -30,7 +31,7 @@ int main() {
   big q = mirvar(0);
   big a = mirvar(0);  //密钥
   big y = mirvar(0);
-  big y1 = mirvar(0), y2 = mirvar(0);
+  big C1 = mirvar(0), C2 = mirvar(0);
   big m = mirvar(0);   //明文
   big m1 = mirvar(0);  //解密出的明文
   big k = mirvar(0);
@@ -64,13 +65,20 @@ int main() {
   decr(p, 2, pminus2);  //大数减法，生成pminus2 = p-2
 
   //==================================================================
-  //查找一个原根
+  //选择随机大素数p的一个原根
+  //
   //若g满足 g^2 mod p !=1 且 g^q mod p !=1，则说明g是一个原根
+  //
+  //设p为安全素数，即使p=2q+1，且q为素数。根据Fermat定理，
+  //如果g是原根，则满足这个公式g^(p-1) mod p =1
+  // 即g^(2q) mod p=1，因而如果
+  // w=min{t>0: g^t mod p=1}
+  // 则有w整除p-1=2q，因而由q是素数知，w只能是2或q，
   while (1) {
     // void bigrand (big w, big x)
     //随机生成一个介于[0,w)之间的随机大数
     // 0 <= x < w
-    bigrand(pminus1, g);  //随机生成一个特定范围的原根, g小于p-1
+    bigrand(pminus1, g);  //随机生成一个特定范围的原根, g小于p-1，大于0
 
     // int compare* (big x, big y)
     // +1 if x > y; 0 if x = y; -1 if x < y
@@ -97,11 +105,11 @@ int main() {
   }
 
   //==================================================================
-  //随机选择私钥 a
-  // 1 < a < p-2
+  //选择一个随机数a作为私钥
+  // 1 < a < p-1
   irand((unsigned)time(NULL));  // 随机数播种
-  while (1) {
-    bigrand(pminus2, a);               // a < p-2
+  while (true) {
+    bigrand(pminus1, a);               // 保证 a < p-1
     if (mr_compare(a, constnum1) > 0)  //保证 a > 1
       break;
   }
@@ -110,49 +118,47 @@ int main() {
   //计算 g^a (mod p)
   powmod(g, a, p, y);  // y =g^a (mod p)
 
-  printf("\n-------公布公钥（p，g，y）--------\n");
+  printf("\n公钥（p,g,y):\n");
   printf("p = \n");
   cotnum(p, stdout);
   printf("g = \n");
   cotnum(g, stdout);
   printf("y = \n");
   cotnum(y, stdout);
-  printf("\n--------私钥----------------------\n");
+  printf("\n私钥a:\n");
   cotnum(a, stdout);
 
-  //-------------------------------------------------------------
-  //加密算法
+  //===============================================================
+  // ElGamal加密
 
-  //随机生成k，使得1<=k<=p-2,(k,p-1)=1
+  //随机生成一个数k，使得1<=k<=p-2,(k,p-1)=1
   irand((unsigned)time(NULL));  // 随机数种子
-  while (1) {
-    bigrand(pminus1, k);               // k小于p-1
-    if (mr_compare(k, constnum1) < 0)  //保证k>=1
-      continue;
-    egcd(k, pminus1, flag);
-    if (mr_compare(flag, constnum1) == 0) break;
-  }  // end
-  //计算y1=g^k mod p
-  powmod(g, k, p, y1);
-  //计算y2=my^k mod p
+  while (true) {
+    bigrand(pminus2, k);                // 保证 k<=p-2
+    if (mr_compare(k, constnum1) >= 0)  //保证 k>=1
+      break;
+  }
+  //计算C1=g^k mod p
+  powmod(g, k, p, C1);
+  //计算C2=my^k mod p
   cinnum(m, fp);
-  powmod2(m, constnum1, y, k, p, y2);
+  powmod2(m, constnum1, y, k, p, C2);
   printf("\n");
-  printf("------------密文（y1，y2）-----------\n");
-  printf("y1 = \n");
-  cotnum(y1, stdout);
-  printf("y2 = \n");
-  cotnum(y2, stdout);
+  printf("------------密文（C1，C2）-----------\n");
+  printf("C1 = \n");
+  cotnum(C1, stdout);
+  printf("C2 = \n");
+  cotnum(C2, stdout);
 
   //-------------------------------------------------------------
   //解密算法
 
   //计算m1
-  copy(y1, flag);
+  copy(C1, flag);
   xgcd(flag, p, flag, flag, flag);  //求y1的逆放到flag里面
-  powmod(flag, a, p, y1);           //求(y1的逆)的x次方  mod p
-  powmod(y2, constnum1, p, y2);     // y2 mod p
-  powmod2(y1, constnum1, y2, constnum1, p, m1);
+  powmod(flag, a, p, C1);           //求(y1的逆)的x次方  mod p
+  powmod(C2, constnum1, p, C2);     // C2 mod p
+  powmod2(C1, constnum1, C2, constnum1, p, m1);
   printf("\n------------解密明文-----------------\n");
   cotnum(m1, stdout);
   if (mr_compare(m, m1) == 0) {
