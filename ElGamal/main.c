@@ -21,6 +21,8 @@ int main() {
 
   //-------------------------------------------------------------
   //密钥生成
+  //公钥 (p,g,g^a)
+  //私钥 a
   miracl *mip = mirsys(1000, 10);  //初始化一个1000个10进制数的大数系统
   mip->IOBASE = 10;                //指定IO使用的是10进制
 
@@ -118,7 +120,7 @@ int main() {
   //计算 g^a (mod p)
   powmod(g, a, p, y);  // y =g^a (mod p)
 
-  printf("\n公钥（p,g,y):\n");
+  printf("\n公钥（p, g, y(g^a)):\n");
   printf("p = \n");
   cotnum(p, stdout);
   printf("g = \n");
@@ -130,7 +132,11 @@ int main() {
 
   //===============================================================
   // ElGamal加密
-
+  // 1、随机选择k [1,p-2]
+  // 2、计算 C1 = g^k (mod p)
+  //    计算 C2 = m * ((g^a))^k (mod p)
+  // 3、发送密文（C1,C2)
+  //
   //随机生成一个数k，使得1<=k<=p-2,(k,p-1)=1
   irand((unsigned)time(NULL));  // 随机数种子
   while (true) {
@@ -138,34 +144,55 @@ int main() {
     if (mr_compare(k, constnum1) >= 0)  //保证 k>=1
       break;
   }
-  //计算C1=g^k mod p
+  //计算C1 = g^k mod p
   powmod(g, k, p, C1);
-  //计算C2=my^k mod p
+  //计算C2 = m * y^k mod p  (y = g^a)
   cinnum(m, fp);
+  printf("从文件中读入明文m：\n");
+  cotnum(m, stdout);
   powmod2(m, constnum1, y, k, p, C2);
   printf("\n");
-  printf("------------密文（C1，C2）-----------\n");
+  printf("密文C = （C1，C2）:\n");
   printf("C1 = \n");
   cotnum(C1, stdout);
   printf("C2 = \n");
   cotnum(C2, stdout);
 
   //-------------------------------------------------------------
-  //解密算法
+  // ElGamal 解密
+  // 1、计算V = C1^a(mod p)
+  // 2、计算m1 = C2 * V^-1 (mod p)
 
   //计算m1
-  copy(C1, flag);
-  xgcd(flag, p, flag, flag, flag);  //求y1的逆放到flag里面
-  powmod(flag, a, p, C1);           //求(y1的逆)的x次方  mod p
-  powmod(C2, constnum1, p, C2);     // C2 mod p
-  powmod2(C1, constnum1, C2, constnum1, p, m1);
-  printf("\n------------解密明文-----------------\n");
+  // void copy* (flash x, flash y)
+  // y = x
+  copy(C1, flag);  // flag = C1
+
+  // int xgcd (big x, big y, big xd, big yd, big z)
+  // z = gcd(x, y) = (x * xd) + (y * yd)
+  // 常用举例（求逆）：xgcd(x, p, x, x, x,); // x = 1/x mod p (p is prime)
+  xgcd(flag, p, flag, flag, flag);  // 代换后即flag是C1的逆，flag = 1/C1 mod p
+
+  big V_r = mirvar(0);
+  powmod(flag, a, p, V_r);  // V_r = （C^(-1)）^a mod p = V^(-1)
+
+  powmod(C2, constnum1, p, C2);  // C2 = C2 mod p
+
+  // void powmod2 (big x, big y, big a, big b, big n, big w)
+  // w = xy ab (mod n)
+  //计算两个模幂的乘积
+  powmod2(C2, constnum1, V_r, constnum1, p, m1);  // m1 = C2 * V_r mod p
+  printf("\n解密明文m1\n");
   cotnum(m1, stdout);
+
+  //====================================
+  //验证解密是否成功
+  printf("\n读入明文m：\n");
+  cotnum(m, stdout);
   if (mr_compare(m, m1) == 0) {
-    printf("\n");
-    printf("解密成功\n");
+    printf("\n读入和解出明文相同，解密成功\n");
   } else
-    printf("解密失败\n");
+    printf("读入和解出明文不同，解密失败\n");
 
   mirexit();
 
