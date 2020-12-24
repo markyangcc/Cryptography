@@ -70,12 +70,20 @@ int main() {
   //选择随机大素数p的一个原根
   //
   //若g满足 g^2 mod p !=1 且 g^q mod p !=1，则说明g是一个原根
+  /*
+  设p为安全素数，即使p=2q+1，且q为素数。由Fermat定理知g^(p-1) mod p=1，
+  即g^(2q) mod p=1，因而如果
+  w=min{t>0: g^t mod p=1}
+  则有w整除p-1=2q，因而由q是素数知，w只能是2或q，此时g是本原元等价于
+  g^2 mod p !=1 且 g ^q mod p !=1
+  */
+  int count = 0;
   while (true) {
     // void bigrand (big w, big x)
     //随机生成一个介于[0,w)之间的随机大数
     // 0 <= x < w
     bigrand(pminus1, g);  //随机生成一个特定范围的原根, g小于p-1
-
+    count++;
     // int compare* (big x, big y)
     // +1 if x > y; 0 if x = y; -1 if x < y
     if (mr_compare(g, constnum1) <= 0)  //保证生成的原根g是大于1的
@@ -95,6 +103,8 @@ int main() {
         break;  //如果temp =1 说明g是原根，跳出循环即可
     }
   }
+
+  printf("count: %d", count);
 
   //==================================================================
   //选择一个随机数a作为私钥
@@ -170,7 +180,7 @@ int main() {
 
   // void powmod2 (big x, big y, big a, big b, big n, big w)
   // w = xy ab (mod n)
-  //计算两个模幂的乘积
+  // 计算两个模幂的乘积
   powmod2(C2, constnum1, V_r, constnum1, p, m1);  // m1 = C2 * V_r mod p
   printf("\n解密明文m1\n");
   cotnum(m1, stdout);
