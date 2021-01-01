@@ -54,4 +54,3 @@ Cryptography algorithm——Playfair Encryption, implemented with C++ STL Librar
 
 ## Stream Cipher
 Stream Cipher(RC4) implementation using C++
-
