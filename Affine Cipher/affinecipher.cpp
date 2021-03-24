@@ -37,9 +37,6 @@ void Affine::encrypt()
   {
     for (int i = 0; i < plaintext.size(); i++)
     {
-      if (!isalpha(plaintext[i])) //Non-alpha -> push_back() directly
-        ciphertext.push_back(plaintext[i]);
-
       char lowerchar = tolower(plaintext[i]);
       ciphertext.push_back(static_cast<char>(
           ((key * (static_cast<int>(lowerchar - 'a')) + shift) % 26) + 'a'));
@@ -61,9 +58,6 @@ void Affine::decrypt()
   {
     for (int i = 0; i < ciphertext.size(); i++)
     {
-      if (!isalpha(ciphertext[i])) //Non-alpha -> push_back() directly
-        plaintext.push_back(ciphertext[i]);
-
       char lowerchar = tolower(ciphertext[i]);
       // If the result of multiplying a, b by 26 modulo is 1, then b is the
       // modulo-inverse of a
